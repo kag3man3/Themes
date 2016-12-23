@@ -1,0 +1,66 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ForumGroupModel
+@using Nop.Web.Models.Boards;
+
+<div class="panel panel-blue margin-bottom-40">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-globe"></i> @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered">
+            <colgroup>
+                <col width="1" />
+                <col />
+                <col width="1" />
+                <col width="1" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th class="forum-details" colspan="2">
+                        @T("Forum.Forum")
+                    </th>
+                    <th class="topics">
+                        @T("Forum.Topics")
+                    </th>
+                    <th class="posts">
+                        @T("Forum.Posts")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var forum in Model.Forums)
+                {
+                    <tr>
+                        <td class="image">
+                            <div class="post"></div>
+                        </td>
+                        <td class="forum-details">
+                            <div class="forum-title">
+                                @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
+                            </div>
+                            <div class="forum-description">
+                                @forum.Description
+                            </div>
+                            <div class="latest-post">
+                                @T("Forum.LatestPost"):
+                                @Html.Action("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
+                            </div>
+                        </td>
+                        <td class="topics">@forum.NumTopics</td>
+                        <td class="posts">@forum.NumPosts</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

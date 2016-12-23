@@ -1,0 +1,83 @@
+﻿@using System.Collections
+@using DevPartner.Nop.Plugin.Misc.Search
+@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using System.Linq
+@using DevPartner.Nop.Plugin.Misc.Search.Services
+@using Nop.Core
+@using Nop.Core.Domain.Localization
+@using Nop.Core.Domain.Seo
+@using Nop.Services.Catalog
+@using Nop.Services.Localization
+@using Nop.Services.Seo
+
+@model TreeNavigationFacetModel
+
+<div class="block">
+    <div class="title">
+        <strong>@T("DevPartner.Search." + Html.SolrFieldPropName<SearchProduct>(Model.Key))</strong>
+    </div>
+    <div class="listbox">
+        <ul class="list">
+            @{
+                foreach (var node in Model.Tree.Children)
+                {
+                    @RenderCategoryLine(Model, node, Model.CurrId > 0)
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+@helper RenderCategoryLine(TreeNavigationFacetModel model, NTree<KeyValuePair<string[], int>> node, bool isCollapsible)
+{
+string nameWithId = node.Data.Key.Last();
+var index = nameWithId.IndexOf("_", StringComparison.Ordinal);
+var name = nameWithId;
+var id = -1;
+if (index != -1)
+{
+    name = HttpUtility.UrlDecode(nameWithId.Substring(index + 1));
+    int.TryParse(nameWithId.Substring(0, index), out id);
+}
+var prop = model.LocalizedProperties.FirstOrDefault(x => x.EntityId == id);
+if (prop != null)
+{
+    name = prop.LocaleValue;
+}
+var isCurrent = id == model.CurrId;
+//get slug
+var catSlugs = model.UrlRecords.Where(x => x.EntityId == id).ToList();
+var langSlug = catSlugs.FirstOrDefault(x => x.LanguageId != 0);
+string url = "";
+if (langSlug != null)
+{
+    url = langSlug.Slug;
+}
+else
+{
+    var defaultSlug = catSlugs.FirstOrDefault(x => x.LanguageId == 0);
+    if (defaultSlug != null)
+    {
+        url = defaultSlug.Slug;
+    }
+}
+
+    <li class="@(isCurrent?"active last":"inactive")">
+        <a href="@url">@name</a> <span>(@node.Data.Value)</span>
+
+        @if (node.Children.Count > 0 && isCollapsible)
+        {
+            <ul class="sublist">
+                @foreach (var subNode in node.Children)
+                {
+                    @RenderCategoryLine(model, subNode, !isCurrent && isCollapsible)
+                }
+            </ul>
+        }
+    </li>
+}

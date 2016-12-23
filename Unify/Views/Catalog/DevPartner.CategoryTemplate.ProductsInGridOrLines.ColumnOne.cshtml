@@ -1,0 +1,42 @@
+﻿@model CategoryModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+
+@using Nop.Web.Models.Catalog;
+@*category breadcrumb*@
+
+
+
+
+@if (Model.Products.Count > 0)
+            {
+    @*<div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">*@
+    <div class="filter-results">
+        @if (Model.PagingFilteringContext.ViewMode == "list")
+        {
+            foreach (var product in Model.Products)
+            {
+                @Html.Partial("_ProductBox_List", product)
+            }
+        }
+        else
+        {
+            for (var i = 0; i < Model.Products.Count; i += 4)
+            {
+                var productsInRowCount = (i + 4 <= Model.Products.Count) ? 4 : Model.Products.Count - i;
+                var products = Model.Products.ToList().GetRange(i, productsInRowCount);
+
+                <div class="row illustration-v2 margin-bottom-30">
+                    @foreach (var product in products)
+                        {
+                        <div class="col-md-3">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+

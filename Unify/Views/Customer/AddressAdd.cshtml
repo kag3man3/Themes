@@ -1,0 +1,57 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model CustomerAddressEditModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    Html.AppendPageCssClassParts("html-account-page");
+    //page class
+    Html.AppendPageCssClassParts("html-address-edit-page");
+}
+@section left
+{
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Addresses })
+}
+@using (Html.BeginForm())
+{
+     @Html.AntiForgeryToken()
+
+<div class="features_items my-account-page"><!--features_items-->
+        <div class="heading margin-bottom-10">
+        <h2 class="title text-center">@T("Account.MyAccount") - @T("Account.CustomerAddresses.AddNew")</h2>
+	</div>
+ <div class="panel panel-default margin-bottom-40">
+        <div class="panel-body custom-page-box-div">
+                <div class="form-horizontal">
+
+            @{
+                    var dataDictAddress = new ViewDataDictionary();
+                    //Merge ModelState (required for validation)
+                    dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                    @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)              
+                }
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="buttons pull-right">
+                    <input type="submit" class="button-1 save-address-button btn btn-primary pull-right " value="@T("Common.Save")" />                    
+                </div>
+                </div>    
+            </div>
+        </div>                
+        </div>
+    </div>
+    </div>
+}

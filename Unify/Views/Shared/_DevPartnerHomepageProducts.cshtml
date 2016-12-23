@@ -1,0 +1,60 @@
+﻿@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using HttpUtility = System.Web.HttpUtility
+@model ICollection<SearchProduct>
+<div class="page search-page">
+    <div class="page-title">
+        <h1>@T("Search")</h1>
+    </div>
+    <div class="page-body">
+
+        @if (Model.SearchProducts.Count > 0)
+        {
+            @Html.Partial("_DevPartnerCatalogSelectors", Model, new ViewDataDictionary())
+        }
+        @Html.Widget("productsearch_page_before_results")
+        <div class="search-results">
+            @if (Model.QueryError)
+            {
+                <div class="warning">
+                    Invalid query
+                </div>
+            }
+            @*@if (!String.IsNullOrEmpty(Model.Warning))
+                {
+                <div class="warning">
+                    @Model.Warning
+                </div>
+                }*@
+            @if (Model.SearchProducts.Count == 0)
+            {
+                <div class="no-result">
+                    @T("Search.NoResultsText")
+                </div>
+            }
+
+            @*<div class="@(Model.PagingFilteringContext.ViewMode == " list" ? "product-list"
+                "product-grid" )">
+            *@
+            <div class="product-list">
+                <div class="item-grid">
+                    @foreach (var p in Model.SearchProducts)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_DevPartnerProductBox", p)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @(Html.Partial("_DevPartnerPagination", new PaginationInfo
+                {
+                    PageUrl = Url.SetParameter("page", "!0"),
+                    CurrentPage = Model.Search.PageIndex,
+                    PageSize = Model.Search.PageSize,
+                    TotalItemCount = Model.TotalCount,
+                }))
+    </div>
+</div>

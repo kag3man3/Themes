@@ -1,0 +1,123 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ManufacturerModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    //meta
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
+    Html.AppendPageCssClassParts("html-manufacturer-page");
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(manufacturerUrl);
+    }
+}
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Extensions;
+@using DevPartner.Nop.Plugin.Core.Helpers;
+
+<div class="row margin-bottom-5">
+    <div class="col-sm-4 result-category">
+        <h2>@Model.Name</h2>
+        @*<small class="shop-bg-red badge-results">@Model.Products.Count</small>*@
+    </div>
+    <div class="col-sm-8">
+        @Html.Widget("manufacturerdetails_top", Model.Id)
+        @Html.Widget("manufacturerdetails_before_filters", Model.Id)
+        <ul class="list-inline clear-both">
+            @if (Model.Products.Count > 0)
+            {
+                @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+            }
+        </ul>
+    </div>
+</div>
+@if (!String.IsNullOrWhiteSpace(Model.Description))
+{
+    <p>@Html.Raw(Model.Description)</p>
+}
+
+@Html.Widget("manufacturerdetails_before_featured_products", Model.Id)
+@if (Model.FeaturedProducts.Count > 0)
+{
+    <div class="row margin-bottom-5">
+        <h2 class="title text-center">@T("Products.FeaturedProducts")</h2>
+        <div class="illustration-v2 margin-bottom-60">
+            <div class="customNavigation margin-bottom-25">
+                <a class="owl-btn prev rounded-x"><i class="fa fa-angle-left"></i></a>
+                <a class="owl-btn next rounded-x"><i class="fa fa-angle-right"></i></a>
+            </div>
+            <ul class="list-inline owl-slider">
+                @foreach (var item in Model.FeaturedProducts)
+                {
+                    <li class="item">
+                        @Html.Partial("_ProductBox", item)
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@Html.Widget("manufacturerdetails_after_featured_products", Model.Id)
+
+@Html.Widget("manufacturerdetails_before_product_list", Model.Id)
+
+@if (Model.Products.Count > 0)
+{
+    <div class="filter-results">
+        @if (Model.PagingFilteringContext.ViewMode == "list")
+        {
+            foreach (var product in Model.Products)
+            {
+                @Html.Partial("_ProductBox_List", product)
+            }
+        }
+        else
+        {
+            for (var i = 0; i < Model.Products.Count; i += 4)
+            {
+                var productsInRowCount = (i + 4 <= Model.Products.Count) ? 4 : Model.Products.Count - i;
+                var products = Model.Products.ToList().GetRange(i, productsInRowCount);
+
+                <div class="row illustration-v2 margin-bottom-30">
+                    @foreach (var product in products)
+                        {
+                        <div class="col-md-3">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+
+
+@(Html.Partial("_DevPartnerPagination", new DevPartner.Nop.Plugin.Core.Models.PaginationInfo
+{
+    PageUrl = Url.SetParameter("pagenumber", "!0"),
+    CurrentPage = Model.PagingFilteringContext.PageIndex + 1,
+    PageSize = Model.PagingFilteringContext.PageSize,
+    TotalItemCount = Model.PagingFilteringContext.TotalPages,
+}))
+
+@Html.Widget("manufacturerdetails_bottom", Model.Id)

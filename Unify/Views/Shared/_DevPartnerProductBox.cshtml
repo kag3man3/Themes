@@ -1,0 +1,156 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model  DevPartner.Nop.Plugin.Misc.Search.Models.SearchProduct
+@using DevPartner.Nop.Plugin.Core.Helpers
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Services.Catalog
+@using Nop.Web.Extensions
+@using Nop.Web.Framework
+@using System.Linq
+@using Nop.Services.Directory
+
+
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    /*if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else*/
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, });
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+
+
+    IPriceFormatter priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+    ICurrencyService currencyService = EngineContext.Current.Resolve<ICurrencyService>();
+    var seName = Model.SeName;
+    var name = Model.Name;
+    var shortDescription = Model.ShortDescription;
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+    decimal finalPriceWithoutDiscount = currencyService.ConvertFromPrimaryStoreCurrency(Model.Price, workContext.WorkingCurrency);
+
+    var seoCode = workContext.WorkingLanguage.UniqueSeoCode.UppercaseFirst();
+    var key = "Stored" + seoCode;
+    var dict = (Dictionary<string, string>)Model[key];
+    if (dict != null)
+    {
+        if (dict.Keys.Contains("Name"))
+        {
+            name = dict["Name"];
+        }
+        if (dict.Keys.Contains("SeName"))
+        {
+            seName = dict["SeName"];
+        }
+        if (dict.Keys.Contains("ShortDescription"))
+        {
+            shortDescription = dict["ShortDescription"];
+        }
+    }
+}
+
+
+
+
+<div class="product-item product-box" data-productid="@Model.Id">
+    <div class="product-img product-img-brd">
+        <a href="@Url.RouteUrl("Product", new {SeName = seName})">
+            <img class="full-width img-responsive" alt="@Model.ImageAlt" src="@Model.ImageUrl" title="@Model.ImageTitle" />
+        </a>
+
+        @if (!Model.DisableBuyButton)
+        {
+            var addToCartText = T("ShoppingCart.AddToCart").Text;
+            if (Model.AvailableForPreOrder)
+            {
+                addToCartText = T("ShoppingCart.PreOrder").Text;
+            }
+            <a class="add-to-cart" href="" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink'); return false;"><i class="fa fa-shopping-cart"></i>@addToCartText</a>
+        }
+
+        @if (Model.MarkAsNew)
+            {
+            <div class="shop-rgba-dark-green rgba-banner">@T("Products.NewProducts")</div>
+        }
+    </div>
+    <div class="product-description product-description-brd">
+        <div class="overflow-h margin-bottom-5">
+            <div class="pull-left">
+                <h4 class="title-price">
+                    <a href="@Url.RouteUrl("Product", new {SeName = Model.SeName})">
+                        @*@Text_Truncate(Model.Name, 15)*@
+                        @name
+                    </a>
+                </h4>
+            </div>
+            <div class="product-price">
+
+                <span class="title-price">@priceFormatter.FormatPrice(finalPriceWithoutDiscount)</span>
+                @*@if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                        {
+                        <span class="title-price line-through">@Model.ProductPrice.OldPrice</span>
+                    }*@
+                @*@if (Model.ProductPrice.DisplayTaxShippingInfo)
+                    {
+                        var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                        <span class="tax-shipping-info">
+                            @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                        </span>
+                    }*@
+
+            </div>
+            <ul class="list-inline product-ratings">
+                @*@if (Model.ReviewOverviewModel.AllowCustomerReviews)
+                            {
+                                var selectedRatingStars = 0;
+                                if (Model.ReviewOverviewModel.TotalReviews != 0)
+                                {
+                                    selectedRatingStars = Model.ReviewOverviewModel.RatingSum / Model.ReviewOverviewModel.TotalReviews;
+                                }
+
+                                for (var i = 0; i < selectedRatingStars; i++)
+                                {
+                            <li><i class="rating-selected fa fa-star"></i></li>
+                        }
+                        for (var i = selectedRatingStars; i < 5; i++)
+                        {
+                            <li><i class="rating fa fa-star"></i></li>
+                        }
+                    }*@
+                @*@if (!Model.ProductPrice.DisableWishlistButton)
+                    {
+                        <li class="like-icon"><a data-original-title="@T("ShoppingCart.AddToWishlist")" data-toggle="tooltip" data-placement="left" class="tooltips" href="" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;"><i class="fa fa-heart"></i></a></li>
+                    }
+                    @if (!Model.ProductPrice.DisableAddToCompareListButton)
+                            {
+                        <li class="like-icon"><a data-original-title="@T("ShoppingCart.AddToCompareList")" data-toggle="tooltip" data-placement="left" class="tooltips" href="" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;"><i class="fa fa-exchange"></i></a></li>
+                    }*@
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

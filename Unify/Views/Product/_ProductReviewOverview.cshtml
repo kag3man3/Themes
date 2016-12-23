@@ -1,0 +1,136 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ProductReviewOverviewModel
+@using System.Globalization
+@using Nop.Web.Models.Catalog;
+@{
+    var selectedRatingStars = 0;
+    if (Model.TotalReviews != 0)
+    {
+        selectedRatingStars = Model.RatingSum / Model.TotalReviews;
+    }
+}
+
+@if (Model.AllowCustomerReviews)
+{
+    <ul class="list-inline product-ratings margin-bottom-30">
+        @for (var i = 0; i < 5; i++)
+        {
+            <li><i class="@(i < selectedRatingStars ? "rating-selected" : "rating") fa fa-star"></i></li>
+        }
+        <li class="product-review-list">
+            @if (Model.TotalReviews > 0)
+            {
+                <span>
+                    (@Model.TotalReviews)
+                    @*<a href="@Url.RouteUrl("ProductReviews", new {productId = Model.ProductId})">
+                        @T("Reviews.Overview.Reviews")
+                    </a>*@
+                    <a href="#" onclick="moveToReviews(); return false;">
+                        @T("Reviews.Overview.Reviews")
+                    </a>
+                    |
+                    @*<a href="@Url.RouteUrl("ProductReviews", new {productId = Model.ProductId})">
+                        @T("Reviews.Overview.AddNew")
+                    </a>*@
+                    <a href="#" onclick="moveToReviews(); return false;">
+                        @T("Reviews.Overview.AddNew")
+                    </a>
+                </span>
+            }
+            else
+            {
+                <span>
+                    @*<a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>*@
+                    <a href="#" onclick="moveToReviews(); return false;">@T("Reviews.Overview.First")</a>
+                </span>
+            }
+        </li>
+    </ul>
+}
+
+
+
+    @*@if (Model.AllowCustomerReviews)
+        {
+            <div class="product-reviews-overview" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                @{
+
+                    double ratingNumber = 0;
+                    int fullStar = 0;
+                    double fractionNumber = 0;
+                    int fractionStar = 0;
+                    int emptyStar = 0;
+
+                    if (Model.TotalReviews != 0)
+                    {
+                        ratingNumber = ((Model.RatingSum * 100.0) / Model.TotalReviews) / 100.0;
+                    }
+                    fullStar = (int)ratingNumber;
+                    fractionNumber = ratingNumber - fullStar;
+
+                    if (fractionNumber > 0.75)
+                    {
+                        fullStar++;
+                    }
+                    else if (fractionNumber > 0.25 && fractionStar < 0.75)
+                    {
+                        fractionStar++;
+                    }
+                    else if (fractionNumber > 0 && fractionNumber < 0.25)
+                    {
+                        emptyStar++;
+                    }
+
+                    emptyStar += (5 - fullStar - fractionStar);
+
+                    <div class="rating-div hide-on-grid">
+
+
+                        @for (int i = 0; i < fullStar; i++)
+                        {
+                            <i class="fa fa-star"></i>
+
+                        }
+                        @for (int i = 0; i < fractionStar; i++)
+                        {
+                            <i class="fa fa-star-half-full"></i>
+
+                        }
+                        @for (int i = 0; i < emptyStar; i++)
+                        {
+                            <i class="fa fa-star-o"></i>
+
+                        }
+                    </div>
+                }
+
+                @if (Model.TotalReviews > 0)
+                {
+                    <div class="product-review-links">
+                        <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">
+                            @Model.TotalReviews
+                        @T("Reviews.Overview.Reviews")
+                    </a> <span class="separator">|</span> <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
+                </div>
+                decimal ratingValue = ratingPercent / (decimal)20;
+                <span itemprop="ratingValue" style="display: none;">@ratingValue.ToString("0.0", new CultureInfo("en-US"))</span>
+                    <span itemprop="reviewCount" style="display: none;">@Model.TotalReviews</span>
+                }
+                else
+                {
+                    <div class="product-no-reviews">
+                        <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
+                    </div>
+                }
+            </div>
+                    }*@

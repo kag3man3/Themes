@@ -1,0 +1,68 @@
+﻿@using DevPartner.Nop.Plugin.Misc.Search
+@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using Nop.Core.Domain.Common
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using HttpUtility = System.Web.HttpUtility
+@model BreadcrumbModel
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var breadcrumbArr = Model.Breadcrumb;
+}
+
+@{
+    <div class="breadcrumb">
+        <ul>
+            <li>
+                <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+                <span class="delimiter">@breadcrumbDelimiter</span>
+            </li>
+            @for (int i = 0; i < breadcrumbArr.Length; i++)
+            {
+                var nameWithId = breadcrumbArr[i];
+                var index = nameWithId.IndexOf("_", StringComparison.Ordinal);
+                var name = nameWithId;
+                var id = -1;
+                if (index != -1)
+                {
+                    name = HttpUtility.UrlDecode(nameWithId.Substring(index + 1));
+                    int.TryParse(nameWithId.Substring(0, index), out id);
+                }
+                var prop = Model.LocalizedProperties.FirstOrDefault(x => x.EntityId == id);
+                if (prop != null)
+                {
+                    name = prop.LocaleValue;
+                }
+                //get slug
+                var catSlugs = Model.UrlRecords.Where(x => x.EntityId == id).ToList();
+                var langSlug = catSlugs.FirstOrDefault(x => x.LanguageId != 0);
+                string url = "";
+                if (langSlug != null)
+                {
+                    url = langSlug.Slug;
+                }
+                else
+                {
+                    var defaultSlug = catSlugs.FirstOrDefault(x => x.LanguageId == 0);
+                    if (defaultSlug != null)
+                    {
+                        url = defaultSlug.Slug;
+                    }
+                }
+                <li>
+                    @if ((i + 1) == breadcrumbArr.Length)
+                    {
+                        <strong class="current-item">@name</strong>
+                    }
+                    else
+                    {
+                        <a href="@url" title="@name">@name</a>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    }
+                </li>
+            }
+
+        </ul>
+    </div>
+}

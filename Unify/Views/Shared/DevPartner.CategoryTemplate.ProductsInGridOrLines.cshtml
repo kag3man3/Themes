@@ -1,0 +1,208 @@
+﻿@model DevPartner.Nop.Plugin.Misc.Search.Models.SeoPageView
+@using DevPartner.Nop.Plugin.Core.Helpers
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Html.AppendCssFileParts("~/Plugins/DevPartner.Misc.Search/Content/styles.css");
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(categoryUrl);
+    }
+    /*
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;*/
+}
+@using System.Web.Mvc.Html
+@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using DevPartner.Nop.Plugin.Misc.Search.Models
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Extensions
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using Nop.Web.Models.Catalog;
+@*category breadcrumb*@
+@section Breadcrumb
+{
+    @{
+        var breadcrumbFacet = Model.QueryResult.Facets.FirstOrDefault(x => x.Key.ToString() == "category");
+
+        if (breadcrumbFacet.Key != null)
+        {
+            @Html.Action("CategoryBreadcrumb", breadcrumbFacet);
+        }
+        Html.Widget("categorydetails_after_breadcrumb", Model.Id);
+    }
+}
+
+
+@section left
+{
+    @foreach (var f in Model.QueryResult.Search.Facets.Where(x => x.Key.ToString() != "breadcrumb"))
+    {
+        <div class="block">
+            <div class="title">
+                <strong>
+                    @T("DevPartner.Search." + f.Key)
+                </strong>
+            </div>
+            <div class="listbox">
+                <ul class="list">
+                    <li><a class="devPartnerRemoveFacet" href="@Url.RemoveFacet(f.Key)">@HttpUtility.UrlDecode(f.Value)</a></li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    @foreach (var f in Model.QueryResult.Facets.Where(x => x.Key.ToString() != "breadcrumb"))
+    {
+        @Html.Render(Model.QueryResult.FacetTemplates[f.Key], f);
+    }
+
+}
+
+<div class="page category-page">
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+    <div class="page-body">
+        @Html.Widget("categorydetails_top", Model.Id)
+        @*description*@
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="category-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+        @Html.Widget("categorydetails_before_subcategories", Model.Id)
+        @*subcategories*@
+        @*@if (Model.SubCategories.Count > 0)
+            {
+                <div class="category-grid sub-category-grid">
+                    <div class="item-grid">
+                        @foreach (var item in Model.SubCategories)
+                        {
+                            <div class="item-box">
+                                <div class="sub-category-item">
+                                    <h2 class="title">
+                                        <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                            @item.Name
+                                        </a>
+                                    </h2>
+                                    <div class="picture">
+                                        <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                            <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }*@
+        @Html.Widget("categorydetails_before_featured_products", Model.Id)
+        @*featured products*@
+        @*@if (Model.FeaturedProducts.Count > 0)
+            {
+                <div class="product-grid featured-product-grid">
+                    <div class="title">
+                        <strong>@T("Products.FeaturedProducts")</strong>
+                    </div>
+                    <div class="item-grid">
+                        @foreach (var item in Model.FeaturedProducts)
+                        {
+                            <div class="item-box">
+                                @Html.Partial("_ProductBox", item)
+                            </div>
+                        }
+                    </div>
+                </div>
+            }*@
+        @Html.Widget("categorydetails_after_featured_products", Model.Id)
+        @if (Model.QueryResult.SearchProducts.Count > 0)
+        {
+            @Html.Partial("_DevPartnerCatalogSelectors", Model.QueryResult, new ViewDataDictionary())
+        }
+        @Html.Widget("categorydetails_before_product_list", Model.Id)
+
+        @if (Model.QueryResult.QueryError)
+        {
+            <div class="warning">
+                Invalid query
+            </div>
+        }
+        @*@if (!String.IsNullOrEmpty(Model.Warning))
+            {
+                <div class="warning">
+                    @Model.Warning
+                </div>
+            }*@
+        @if (Model.QueryResult.SearchProducts.Count == 0)
+        {
+            <div class="no-result">
+                @T("Search.NoResultsText")
+            </div>
+        }
+
+
+        @if (Model.QueryResult.SearchProducts.Count > 0)
+        {
+            @*<div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
+                    <div class="item-grid">
+                        @foreach (var product in Model.Products)
+                        {
+                            <div class="item-box">
+                                @Html.Partial("_ProductBox", product)
+                            </div>
+                        }
+                    </div>
+                </div>*@
+
+            @*<div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">*@
+            <div class="product-list">
+                <div class="item-grid">
+                    @{
+                        var arr = Model.QueryResult.SearchProducts.ToArray();
+                        for (int i = 0; i < Model.QueryResult.SearchProducts.Count; i++)
+                        {
+                            if (i == 10)
+                            {
+                                <div class="DB-banner-catalog">
+                                    @Html.Action("TopicBlock", "Topic", new { systemName = "BannerCategoryPage" })
+                                </div>
+                            }
+                            var p = arr[i];
+                            <div class="item-box">
+                                @Html.Partial("_DevPartnerProductBox", p)
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+                        }
+
+        @(Html.Partial("_DevPartnerPagination", new DevPartner.Nop.Plugin.Core.Models.PaginationInfo
+    {
+        PageUrl = Url.SetParameter("page", "!0"),
+        CurrentPage = Model.QueryResult.Search.PageIndex,
+        PageSize = Model.QueryResult.Search.PageSize,
+        TotalItemCount = Model.QueryResult.TotalCount,
+    }))
+        @Html.Widget("categorydetails_bottom", Model.Id)
+    </div>
+</div>
+
+
+<div style="text-align: center;">
+    <div style="text-align: left;"><span class="DP_footer_website"><a href="http://WWW.XDALYS.LT">WWW.XDALYS.LT</a></span>&nbsp;&nbsp; <span class="DP_footer_email"> <a href="mailto:auto@xdalys.lt">auto@xdalys.lt</a> <span class="DP_footer_email"><a href="mailto:biuras@xdalys.lt">xdalys@xdalys.lt</a></span> <span class="DP_footer_email"><a href="mailto:ofisas@xdalys.lt">ofisas@xdalys.lt</a></span></span></div>
+    <div style="text-align: left;">&nbsp;</div>
+    <div style="text-align: left;">
+        Россия:<span class="DP_footer_tel"><strong>+74999186188 </strong></span>
+        Украина:<span class="DP_footer_tel"><strong>+380947104040</strong></span>Литва:<span class="DP_footer_tel"><strong>+37067202210</strong></span>
+    </div>
+</div>

@@ -1,0 +1,163 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model OrderTotalsModel
+@using Nop.Web.Models.ShoppingCart;
+
+<ul class="list-inline total-result">
+    <li>
+        <h4>@T("ShoppingCart.Totals.SubTotal"):</h4>
+        <div class="total-result-in">
+            <span>@Model.SubTotal</span>
+        </div>
+    </li>
+    @if (!String.IsNullOrEmpty(Model.SubTotalDiscount))
+    {
+        <li>
+            <h4>
+                @T("ShoppingCart.Totals.SubTotalDiscount")
+                @if (Model.AllowRemovingSubTotalDiscount)
+                {
+                    <input type="submit" name="removesubtotaldiscount" value=" " title="@T("Common.Remove")" class="btn-u btn-u-sea-shop" />
+                }
+                :
+            </h4>
+            <div class="total-result-in">
+                <span>@Model.SubTotalDiscount</span>
+            </div>
+        </li>
+
+    }
+    <li>
+        <h4>@T("ShoppingCart.Totals.Shipping"):</h4>
+        @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
+            {
+            @T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)
+        }
+        <div class="total-result-in">
+            <span>
+                @if (Model.RequiresShipping)
+                {
+                    if (!String.IsNullOrEmpty(Model.Shipping))
+                    {
+                        @Model.Shipping
+                    }
+                    else
+                    {
+                        @T("ShoppingCart.Totals.CalculatedDuringCheckout")
+                    }
+                }
+                else
+                {
+                    @T("ShoppingCart.Totals.Shipping.NotRequired")
+                }
+            </span>
+        </div>
+    </li>
+    @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
+    {
+        <li>
+            <h4>@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</h4>
+            <div class="total-result-in">
+                <span>@Model.PaymentMethodAdditionalFee</span>
+            </div>
+        </li>
+    }
+    @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
+    {
+        foreach (var taxRate in Model.TaxRates)
+        {
+            <li>
+                <h4>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</h4>
+                <div class="total-result-in">
+                    <span>@taxRate.Value</span>
+                </div>
+            </li>
+        }
+    }
+    @if (Model.DisplayTax)
+    {
+        <li>
+            <h4>@T("ShoppingCart.Totals.Tax"):</h4>
+            <div class="total-result-in">
+                <span>@Model.Tax</span>
+            </div>
+        </li>
+    }
+    @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
+    {
+        <li>
+            <h4>
+                @T("ShoppingCart.Totals.OrderTotalDiscount")
+                @if (Model.AllowRemovingOrderTotalDiscount)
+                {
+                    <input type="submit" name="removeordertotaldiscount" value=" " title="@T("Common.Remove")" class="btn-u btn-u-sea-shop" />
+                }
+                :
+            </h4>
+            <div class="total-result-in">
+                <span>@Model.OrderTotalDiscount</span>
+            </div>
+        </li>
+    }
+    @if (Model.GiftCards.Count > 0)
+    {
+        foreach (var gc in Model.GiftCards)
+        {
+            <li>
+                <h4>
+                    @T("ShoppingCart.Totals.GiftCardInfo", gc.CouponCode)
+                    @if (Model.IsEditable)
+                    {
+                        //little hack here with empty "value" element
+                        <input type="submit" name="removegiftcard-@gc.Id" value=" " title="@T("Common.Remove")" class="btn-u btn-u-sea-shop" />
+                    }
+                    :
+                </h4>
+                <div class="total-result-in">
+                    <span>@gc.Amount</span>
+                </div>
+            </li>
+            <li>
+                <div class="total-result-in">
+                    <span>@string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)</span>
+                </div>
+            </li>
+        }
+    }
+    @if (Model.RedeemedRewardPoints > 0)
+    {
+        <li>
+            <h4>@string.Format(T("ShoppingCart.Totals.RewardPoints").Text, Model.RedeemedRewardPoints):</h4>
+            <div class="total-result-in">
+                <span>@Model.RedeemedRewardPointsAmount</span>
+            </div>
+        </li>
+    }
+    <li class="divider"></li>
+    <li class="total-price">
+        <h4>@T("ShoppingCart.Totals.OrderTotal"):</h4>
+        <div class="total-result-in">
+            @if (!String.IsNullOrEmpty(Model.OrderTotal))
+            {
+                <span>
+                    @Model.OrderTotal
+                </span>
+            }
+            else
+            {
+                <span>
+                    @T("ShoppingCart.Totals.CalculatedDuringCheckout")
+                </span>
+            }
+        </div>
+    </li>
+</ul>

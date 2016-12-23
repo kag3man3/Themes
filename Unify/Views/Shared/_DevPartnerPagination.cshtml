@@ -1,0 +1,39 @@
+﻿@model DevPartner.Nop.Plugin.Core.Models.PaginationInfo
+
+<div class="pager">
+    <ul>
+        <li class="total-summary">@T("Pager.CurrentPage", Model.CurrentPage, Model.TotalItemCount / Model.PageSize + ((Model.TotalItemCount % Model.PageSize) != 0 ? 1 : 0), Model.TotalItemCount)</li>
+        <li class="previous-page">
+            @if (Model.HasPrevPage)
+            {
+                <a href="@Model.PrevPageUrl">@T("Pager.Previous")</a>
+            }
+            else
+            {
+                <span class="disabledPage">@T("Pager.Previous")</span>
+            }
+        </li>
+        @foreach (var p in Model.Pages)
+        {
+            if (p == Model.CurrentPage)
+            {
+                <li class="current-page"><span>@p</span></li>
+            }
+            else
+            {
+                <li class="individual-page"><a href="@Model.PageUrlFor(p)">@p</a></li>
+            }
+        }
+
+        <li class="next-page">
+            @if (Model.HasNextPage)
+            {
+                <a href="@Model.NextPageUrl">@T("Pager.Next")</a>
+            }
+            else
+            {
+                <span class="disabledPage">@T("Pager.Next")</span>
+            }
+        </li>
+    </ul>
+</div>

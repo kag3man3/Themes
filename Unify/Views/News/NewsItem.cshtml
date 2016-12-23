@@ -1,0 +1,271 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model NewsItemModel
+@using Nop.Web.Models.News;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne_SkyForms.cshtml";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    //meta
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
+    Html.AppendPageCssClassParts("html-news-item-page");
+}
+
+<div class="bg-color-light">
+    <div class="container content-sm">
+        <div class="news-v3 bg-color-white margin-bottom-30">
+            <div class="news-v3-in">
+                <ul class="list-inline posted-info">
+                    <li><i class="fa fa-clock-o"></i> @Model.CreatedOn.ToString("T")</li>
+                    <li><i class="fa fa-calendar"></i> @Model.CreatedOn.ToString("D")</li>
+                </ul>
+                <h2>@Model.Title</h2>
+                <p>@Html.Raw(Model.Full)</p>
+            </div>
+        </div>
+
+        @if (Model.AllowComments)
+        {
+            @*<div class="news-comment-notifications">
+                    <div class="message-error">@Html.ValidationSummary(true)</div>
+                    @{
+                        var result = TempData["nop.news.addcomment.result"] as string;
+                    }
+                    @if (!String.IsNullOrEmpty(result))
+                    {
+                        <div class="alert alert-success square-box result">@result</div>
+                    }
+                </div>*@
+
+
+        if (Model.Comments.Count > 0)
+        {
+            <h2 class="=margin-bottom-20">@T("News.Comments")</h2>
+
+            foreach (var comment in Model.Comments)
+            {
+                <div class="row blog-comments margin-bottom-30">
+                    <div class="col-sm-12">
+                        <div class="comments-itself">
+                            <h4>
+                                @comment.CommentTitle
+                                <span>
+                                    @if (!string.IsNullOrEmpty(comment.CustomerName))
+                                    {
+                                        <text>
+                                            @comment.CustomerName / 
+                                        </text>
+                                    }
+                                    @comment.CreatedOn.ToString("T") / @comment.CreatedOn.ToString("D")
+                                </span>
+                            </h4>
+                            <p>
+                                @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        <h2 class="=margin-bottom-20">@T("News.Comments.LeaveYourComment")</h2>
+        <div id="comment-form">
+            @using (Html.BeginForm())
+                {
+                @Html.AntiForgeryToken()
+                <div class="sky-form sky-changes-4">
+                    <fieldset>
+                        <div class="message-error">@Html.ValidationSummary(true)</div>
+                        <div class="margin-bottom-30">
+                            @Html.LabelFor(model => model.AddNewComment.CommentTitle, new { @class = "label-v2" }, ":")
+                            <label class="input">
+                                @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "review-title, form-control" })
+                            </label>
+                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
+                        </div>
+                        <div class="margin-bottom-30">
+                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { @class = "label-v2" }, ":")
+                            <label class="textarea">
+                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { rows = "7" })
+                            </label>
+                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                        </div>
+                    </fieldset>
+                    <footer class="comment-submit">
+                        @if (Model.AddNewComment.DisplayCaptcha)
+                    {
+                            <div class="captcha-box form-group row">
+                                <div class="col-md-6">
+                                    @Html.Raw(Html.GenerateCaptcha())
+                                </div>
+                            </div>
+                        }
+                        <input type="submit" name="add-comment" class="btn-u btn-u-sea-shop btn-u-sm pull-right" value="@T("News.Comments.SubmitButton")" />
+                    </footer>
+                </div>
+            }
+        </div>
+        }
+    </div>
+</div>
+
+@*<div class="features_items custom-blog-page">
+        <!--features_items-->
+        <h2 class="title text-center">@Model.Title</h2>
+
+
+        <div class="product-details">
+            <div class="custom-page-box-div">
+                <div class="post-meta">
+                    <ul class="sinlge-post-meta">
+                        <li><i class="fa fa-clock-o"></i> @Model.CreatedOn.ToString("T")</li>
+                        <li><i class="fa fa-calendar"></i> @Model.CreatedOn.ToString("D")</li>
+                    </ul>
+
+                </div>
+
+
+                <p>@Html.Raw(Model.Full)</p>
+
+                @if (Model.AllowComments)
+                {
+                    <div class="">
+
+                        <div class="news-comment-notifications">
+                            <div class="message-error">@Html.ValidationSummary(true)</div>
+                            @{
+                                var result = TempData["nop.news.addcomment.result"] as string;
+                            }
+                            @if (!String.IsNullOrEmpty(result))
+                            {
+                                <div class="alert alert-success square-box result">@result</div>
+                            }
+                        </div>
+                        @if (Model.Comments.Count > 0)
+                        {
+                            <div class="space15px">&nbsp;</div>
+                            <div class="fieldset">
+                                <div id="legend">
+                                    <legend>@T("News.Comments")</legend>
+                                </div>
+
+                            </div>
+
+                            foreach (var comment in Model.Comments)
+                            {
+
+
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="blog-post-area">
+                                            <div class="single-blog-post">
+                                                <h3>@comment.CommentTitle</h3>
+                                                <div class="post-meta">
+                                                    <ul>
+                                                        <li><i class="fa fa-user"></i>@(comment.CustomerName)</li>
+                                                        <li><i class="fa fa-clock-o"></i>  @Model.CreatedOn.ToString("T")</li>
+                                                        <li><i class="fa fa-calendar"></i>  @Model.CreatedOn.ToString("D")</li>
+                                                    </ul>
+
+
+                                                </div>
+
+                                                <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+
+                            }
+                        }
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="space15px">&nbsp;</div>
+                            <div class="fieldset">
+                                <div id="legend">
+                                    <legend>@T("News.Comments.LeaveYourComment")</legend>
+
+                                </div>
+
+                            </div>
+
+                            <div class=" ">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.AddNewComment.CommentTitle, new { @class = "col-md-2" }, ":")
+                                    <div class="col-sm-4">
+                                        @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "gray-input" })
+                                    </div>
+                                    <div class="col-md-offset-2 col-md-4">
+                                        @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="">
+                                    <div class="row">
+                                        @Html.LabelFor(model => model.AddNewComment.CommentText, new { @class = "col-md-2" }, ":")
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "gray-textarea", rows = "10" })
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                                        </div>
+                                    </div>
+                                    @if (Model.AddNewComment.DisplayCaptcha)
+                                    {
+                                        <div class="captcha-box">
+                                            @Html.Raw(Html.GenerateCaptcha())
+                                        </div>
+                                    }
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="pull-right col-md-3">
+                                            <input type="submit" name="add-comment" class="btn btn-primary" value="@T("News.Comments.SubmitButton")" />
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                        }
+                    </div>
+
+                                }
+
+            </div>
+
+        </div>
+    </div>
+*@
+
+
+
+
+
+
+
+
+
+
+
+
+

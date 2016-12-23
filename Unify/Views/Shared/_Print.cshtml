@@ -1,0 +1,42 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@using Nop.Core.Infrastructure
+@using Nop.Core;
+@using Nop.Web.Framework.Themes;
+@{
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+}
+<!DOCTYPE html>
+<html  @Html.NopPageCssClasses()>
+<head>
+    <title>@Html.NopTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <link href="@Url.Content(string.Format("~/Themes/{0}/Content/css/blocks.css", themeName))" rel="stylesheet" type="text/css" />
+    @if (supportRtl)
+    {
+        <link href="@Url.Content(string.Format("~/Themes/{0}/Content/css/pages/page_invoice-rtl.css", themeName))" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content(string.Format("~/Themes/{0}/Content/plugins/bootstrap/css/bootstrap-rtl.min.css", themeName))" rel="stylesheet" type="text/css" />
+    }
+    else
+    {
+
+        <link href="@Url.Content(string.Format("~/Themes/{0}/Content/css/pages/page_invoice.css", themeName))" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content(string.Format("~/Themes/{0}/Content/plugins/bootstrap/css/bootstrap.min.css", themeName))" rel="stylesheet" type="text/css" />
+    }
+    @*<link href="@Url.Content(string.Format("~/Themes/{0}/Content/css/print.css", themeName))" rel="stylesheet" type="text/css" />*@
+    <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>

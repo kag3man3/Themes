@@ -1,0 +1,61 @@
+﻿ @*
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+*@
+
+@model ActiveDiscussionsModel
+@using Nop.Web.Models.Boards;
+@using Nop.Web.Models.Common;
+
+<div class="headline headline-md">
+    <h2>@T("Forum.ActiveDiscussions")
+        @if (Model.ActiveDiscussionsFeedEnabled)
+        {
+            <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="link-rss" title="@T("Forum.ActiveDiscussionsRSSLinkTitle")"><i class="rs rounded-md fa fa-rss"></i></a>
+        }
+    </h2>
+</div>
+@if (Model.ForumTopics.Count > 0)
+{
+<ul class="list-unstyled blog-trending  ">
+    @foreach (var topic in Model.ForumTopics)
+    {
+        <li>
+            <h3>@Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }) (<span class="replies">
+    @topic.NumReplies
+</span>)
+
+            @if (topic.NumPosts > Model.PostsPageSize)
+            {
+                <div class="topic-pager">
+                    @Html.ForumTopicSmallPager(topic)
+                </div>
+            }
+            </h3>
+            <small>@Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })</small>
+            @*<span class="replies">
+                @topic.NumReplies
+            </span>
+            <span class="views">
+                @topic.Views
+            </span>*@
+                        @*<p></p>*@
+        </li>
+    }
+</ul>
+}
+<div class="margin-bottom-50">
+    @if (Model.ViewAllLinkEnabled)
+    {
+        <div class="view-all">
+            @Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions", null)
+        </div>
+    }
+</div>

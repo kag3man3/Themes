@@ -1,0 +1,29 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model SubscriptionActivationModel
+@using Nop.Web.Models.Newsletter;
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //page class
+    Html.AppendPageCssClassParts("html-newsletter-page");
+}
+<div class="page newsletter-page">
+    <div class="page-title">
+        <h1>@T("Newsletter.Title")</h1>
+    </div>
+    <div class="page-body">
+        <strong>
+            @Model.Result
+        </strong>
+    </div>
+</div>

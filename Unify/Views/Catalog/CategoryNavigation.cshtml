@@ -1,0 +1,110 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model CategoryNavigationModel
+@using Nop.Web.Models.Catalog;
+
+@functions{
+    public bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
+    {
+        if (Model.CurrentCategoryId == 0)
+            return false;
+
+        if (category.Id == Model.CurrentCategoryId)
+            return true;
+
+        foreach (var subCategory in category.SubCategories)
+        {
+            if (BreadCrumbContainsCurrentCategoryId(subCategory))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+@helper RenderCategoryLine(CategorySimpleModel category)
+{
+    bool active = category.Id == Model.CurrentCategoryId || category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+    string liClassActive = active ? "active" : "";
+    string liClassToggle = category.SubCategories.Any() ? "list-toggle" : "";
+
+    if (category.SubCategories.Count > 0)
+    {
+        <li class="list-group-item @liClassActive list-toggle">
+            @*<a href="@category.SeName">
+                @category.Name
+                @if (category.NumberOfProducts.HasValue)
+                {
+                    <text> </text>
+                    @T("Categories.TotalProducts", category.NumberOfProducts.Value)
+                }
+            </a>*@
+            <div class="title">
+                <a href="@category.SeName">
+                    @category.Name
+                    @if (category.NumberOfProducts.HasValue)
+                    {
+                        <text> </text>
+                        @T("Categories.TotalProducts", category.NumberOfProducts.Value)
+                    }
+                </a>
+                <a data-toggle="collapse" href="#@category.SeName"></a>
+                @*<a data-toggle="collapse" href="#@category.SeName"></a>*@
+            </div>
+            <ul id="@category.SeName" class="collapse @(active ? "in" : "")">
+                @foreach (var subCategory in category.SubCategories)
+                {
+                    @RenderCategoryLine(subCategory)
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="list-group-item @liClassActive">
+            <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">
+                @category.Name
+                @if (category.NumberOfProducts.HasValue)
+                {
+                    <text> </text>
+                    @T("Categories.TotalProducts", category.NumberOfProducts.Value)
+                }
+            </a>
+        </li>
+    }
+}
+
+
+@if (Model.Categories.Count > 0)
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" href="#collapseCategories">
+                        @T("Categories")
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapseCategories" class="panel-collapse collapse in">
+                <ul class="list-group sidebar-nav-v1">
+                    @foreach (var category in Model.Categories)
+                    {
+                        @RenderCategoryLine(category)
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}

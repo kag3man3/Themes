@@ -1,0 +1,83 @@
+﻿@using System.Collections
+@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using DevPartner.Nop.Plugin.Core.Helpers
+@using DevPartner.Nop.Plugin.Misc.Search
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using DevPartner.Nop.Plugin.Misc.Search.Services;
+@using Nop.Services.Localization;
+@using Nop.Core;
+@using Nop.Core.Domain.Localization;
+@using System.Linq
+@model KeyValuePair<string, ICollection<KeyValuePair<string, int>>>
+@{
+    var settingService = EngineContext.Current.Resolve<ISettingService>();
+    var searchSettings = settingService.LoadSetting<DevPartnerSearchSetting>();
+    var localizedEntityService = (DevPartnerLocalizedEntityService)EngineContext.Current.Resolve<ILocalizedEntityService>();
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+
+    var currName = Url.GetFacet("breadcrumb");
+    string[] arrBreadcrumb = currName.Split(searchSettings.CategoryNameDelimiter);
+    if (arrBreadcrumb.Length > 0)
+    {
+        currName = arrBreadcrumb.Last();
+    }
+    var queueBreadcrumb = new Queue(arrBreadcrumb);
+    var listIds = Model.Value.ToIdList(searchSettings.CategoryNameDelimiter);
+    var localizedProperties = localizedEntityService.GetLocalizedProperties(listIds, Model.Key, workContext.WorkingLanguage.Id);
+}
+<div class="block">
+    <div class="title">
+        <strong>@T("DevPartner.Search." + Html.SolrFieldPropName<SearchProduct>(Model.Key))</strong>
+    </div>
+    <div class="listbox">
+        <ul class="list">
+            @{
+                var tree = Model.Value.ToTree(searchSettings.CategoryNameDelimiter);
+                foreach (var node in tree.Children)
+                {
+                    @RenderCategoryLine(node, queueBreadcrumb, currName, searchSettings.CategoryNameDelimiter, localizedProperties)
+                }
+            }
+        </ul>
+    </div>
+</div>
+@helper RenderCategoryLine(NTree<KeyValuePair<string[], int>> node, Queue queueBreadcrumb, string currName, string delimiter, IList<LocalizedProperty> localizedProperties)
+{
+string nameWithId = node.Data.Key.Last();
+var index = nameWithId.IndexOf("_", StringComparison.Ordinal);
+var name = nameWithId;
+var id = -1;
+if (index != -1)
+{
+    name = nameWithId.Substring(index + 1);
+    int.TryParse(nameWithId.Substring(0, index), out id);
+}
+var prop = localizedProperties.FirstOrDefault(x => x.EntityId == id);
+if (prop != null)
+{
+    name = prop.LocaleValue;
+}
+var currNode = queueBreadcrumb.Count > 0 ? queueBreadcrumb.Peek() : "";
+var isCollapsible = nameWithId == (string)currNode;
+var isCurrent = nameWithId == currName;
+if (isCollapsible)
+{
+    queueBreadcrumb.Dequeue();
+}
+
+
+    <li class="@(isCurrent?"active last":"inactive")">
+        <a href="@Url.SetFacet("breadcrumb", string.Join(delimiter, node.Data.Key))">@HttpUtility.UrlDecode(name)</a> <span>(@node.Data.Value)</span>
+        @if (node.Children.Count > 0 && isCollapsible)
+        {
+            <ul class="sublist">
+                @foreach (var subNode in node.Children)
+                {
+                    @RenderCategoryLine(subNode, queueBreadcrumb, currName, delimiter, localizedProperties)
+                }
+            </ul>
+        }
+    </li>
+}

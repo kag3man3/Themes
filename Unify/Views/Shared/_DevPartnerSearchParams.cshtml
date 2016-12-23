@@ -1,0 +1,73 @@
+﻿@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using HttpUtility = System.Web.HttpUtility
+@model ProductView
+<div class="search-input">
+    @using (Html.BeginRouteForm("DevPartnerProductSearch", FormMethod.Get))
+            {
+        <div class="fieldset">
+            <div class="form-fields">
+                <div class="basic-search">
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.Search.FreeSearch, new { }, ":")
+                        @Html.TextBoxFor(model => model.Search.FreeSearch, new { @class = "search-text" })
+                    </div>
+                    @Html.Widget("productsearch_page_basic")
+                    @*<div class="inputs reversed">
+                            @Html.CheckBoxFor(model => model.adv)
+                            @Html.LabelFor(model => model.adv)
+                        </div>*@
+                </div>
+                @*<div class="advanced-search" id="advanced-search-block">
+                    @if (Model.AvailableCategories.Count > 0)
+                    {
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.cid, new {}, ":")
+                            @Html.DropDownListFor(model => model.cid, Model.AvailableCategories)
+                        </div>
+                        <div class="inputs reversed">
+                            @Html.CheckBoxFor(model => model.isc)
+                            @Html.LabelFor(model => model.isc)
+                        </div>
+                    }
+                    @if (Model.AvailableManufacturers.Count > 0)
+                    {
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.mid, new {}, ":")
+                            @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
+                        </div>
+                    }
+                    <div class="inputs">
+                        <label>@T("Search.PriceRange"):</label>
+                        <span class="price-range">
+                                @T("Search.PriceRange.From")
+                                @Html.TextBoxFor(model => model.pf, new {@class = "price-from"})
+                                @T("Search.PriceRange.To")
+                                @Html.TextBoxFor(model => model.pt, new {@class = "price-to"})
+                            </span>
+                    </div>
+                    <div class="inputs reversed">
+                        @Html.CheckBoxFor(model => model.sid)
+                        @Html.LabelFor(model => model.sid)
+                    </div>*@
+                @if (!string.IsNullOrEmpty(Model.DidYouMean))
+                {
+                    <div>
+                        Did you mean <strong><em><a href="@Url.ForQuery(Model.DidYouMean)">@Model.DidYouMean</a></em></strong>
+                    </div>
+
+                }
+                @if (Model.QueryError)
+                {
+                    <span class="error">Invalid query</span>
+                }
+                @Html.Widget("productsearch_page_advanced")
+            </div>
+        </div>
+        <div class="buttons">
+            <input type="submit" class="button-1 search-button" value="@T("Search.Button")" />
+        </div>
+    }
+</div>

@@ -1,0 +1,235 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model AddressModel
+@using Nop.Web.Models.Common;
+
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }
+                });
+            });
+        });
+    </script>
+}
+@Html.HiddenFor(model => model.Id)
+<div class="form-horizontal">
+    <div class="form-group">
+
+
+        <div class="col-lg-3">
+                @Html.LabelFor(model => model.FirstName, new { @class = "control-label" }, " :")
+                @Html.RequiredHint()
+        </div>
+        <div class="col-lg-9">
+            @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", autofocus = "autofocus" })
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+    </div>
+    <div class="form-group inputs">
+
+
+        <div class="col-lg-3">
+                @Html.LabelFor(model => model.LastName, new { @class = "control-label" }, " :")
+                @Html.RequiredHint()
+        </div>
+        <div class="col-lg-9">
+            @Html.TextBoxFor(model => model.LastName, new { @class = "form-control", autofocus = "autofocus" })
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+    </div>
+    <div class="form-group inputs">
+        <div class="col-lg-3">
+                @Html.LabelFor(model => model.Email, new { @class = "control-label" }, " :")
+                @Html.RequiredHint()
+        </div>
+        <div class="col-lg-6 col-md-9 col-sm-9 col-xs-9">
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", autofocus = "autofocus" })
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+    </div>
+    @if (Model.CompanyEnabled)
+    {
+        <div class="form-group inputs">
+            <div class="col-lg-3">
+                    @Html.LabelFor(model => model.Company, new { @class = "control-label" }, " :")
+                    @if (Model.CompanyRequired)
+                    {
+                        @Html.RequiredHint()
+                    }
+            </div>
+            <div class="col-lg-9">
+                @Html.TextBoxFor(model => model.Company, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(model => model.Company)
+            </div>
+        </div>
+    }
+    @if (Model.CountryEnabled)
+    {
+        <div class="form-group inputs">
+            <div class="col-lg-3 ">
+                    @Html.LabelFor(model => model.CountryId, new { @class = "control-label" }, " :")
+                    @Html.RequiredHint()
+            </div>
+            <div class="col-lg-9">
+                @Html.DropDownList("CountryId", Model.AvailableCountries, new { @class = "gray-dropdown" })
+                @Html.ValidationMessageFor(model => model.CountryId)
+            </div>
+        </div>
+    }
+
+    @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+    {
+        <div class="form-group inputs">
+
+
+            <div class="col-lg-3">
+                    @Html.LabelFor(model => model.StateProvinceId, new { @class = "control-label" }, " :")
+            </div>
+            <div class="col-lg-9">
+                @Html.DropDownList("StateProvinceId", Model.AvailableStates, new { @class = "gray-dropdown" })
+                <span id="states-loading-progress" style="display: none;" class="text-info">@T("Common.Wait...")</span>
+                @Html.ValidationMessageFor(model => model.StateProvinceId)
+            </div>
+        </div>
+    }
+    @if (Model.CityEnabled)
+    {
+        <div class="form-group inputs">
+
+
+            <div class="col-lg-3">
+                    @Html.LabelFor(model => model.City, new { @class = "control-label" }, " :")
+                    @if (Model.CityRequired)
+                    {
+                        @Html.RequiredHint()
+                    }
+            </div>
+            <div class="col-lg-9">
+                @Html.TextBoxFor(model => model.City, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(model => model.City)
+            </div>
+        </div>
+    }
+    @if (Model.StreetAddressEnabled)
+    {
+        <div class="form-group inputs">
+
+
+            <div class="col-lg-3">
+                    @Html.LabelFor(model => model.Address1, new { @class = "control-label" }, " :")
+                    @if (Model.StreetAddressRequired)
+                    {
+                        @Html.RequiredHint()
+                    }
+            </div>
+            <div class="col-lg-9">
+                @Html.TextBoxFor(model => model.Address1, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(model => model.Address1)
+            </div>
+        </div>
+    }
+    @if (Model.StreetAddress2Enabled)
+    {
+        <div class="form-group inputs">
+
+
+            <div class="col-lg-3">
+                    @Html.LabelFor(model => model.Address2, new { @class = "control-label" }, " :")
+                    @if (Model.StreetAddress2Required)
+                    {
+                        @Html.RequiredHint()
+                    }
+            </div>
+            <div class="col-lg-9">
+                @Html.TextBoxFor(model => model.Address2, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(model => model.Address2)
+            </div>
+        </div>
+    }
+    @if (Model.ZipPostalCodeEnabled)
+    {
+        <div class="form-group inputs">
+            <div class="col-lg-3 ">
+                    @Html.LabelFor(model => model.ZipPostalCode, new { @class = "control-label" }, " :")
+                    @if (Model.ZipPostalCodeRequired)
+                    {
+                        @Html.RequiredHint()
+                    }
+            </div>
+            <div class="col-lg-9">
+                @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(model => model.ZipPostalCode)
+            </div>
+        </div>
+    }
+    @if (Model.PhoneEnabled)
+    {
+        <div class="form-group inputs">
+
+
+            <div class="col-lg-3">
+                    @Html.LabelFor(model => model.PhoneNumber, new { @class = "control-label" }, " :")
+                    @if (Model.PhoneRequired)
+                    {
+                        @Html.RequiredHint()
+                    }
+            </div>
+            <div class="col-lg-9">
+                @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(model => model.PhoneNumber)
+            </div>
+        </div>
+    }
+    @if (Model.FaxEnabled)
+    {
+        <div class="form-group inputs">
+            <div class="col-lg-3 ">
+                    @Html.LabelFor(model => model.FaxNumber, new { @class = "control-label" }, " :")
+                    @if (Model.FaxRequired)
+                    {
+                        @Html.RequiredHint()
+                    }
+            </div>
+            <div class="col-lg-9">
+                @Html.TextBoxFor(model => model.FaxNumber, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(model => model.FaxNumber)
+            </div>
+        </div>
+    }
+
+    @if (Model.CustomAddressAttributes.Count > 0)
+    {
+        @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
+    }
+</div>

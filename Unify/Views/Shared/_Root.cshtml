@@ -1,0 +1,59 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+
+
+@*@Html.Action("BsMenu", "BsMenu", new {area = ""})*@
+@{
+    Layout = "~/Views/Shared/_Root.Head.cshtml";
+    
+}
+
+@Html.Widget("body_start_html_tag_after")
+@Html.Partial("_Notifications")
+@Html.Action("JavaScriptDisabledWarning", "Common")
+@Html.Partial("OldInternetExplorerWarning")
+
+<div class="wrapper">
+    @Html.Action("JavaScriptDisabledWarning", "Common")
+    <div>
+        <script type="text/javascript">
+            AjaxCart.init(false, '.cart-qty', '.wishlist-qty', '#flyout-cart');
+        </script>
+
+        @*ajax loading window*@
+        <div class="ajax-loading-block-window" style="display: block">
+            <div class="loading-image">
+            </div>
+        </div>
+
+        <div>
+            <header id="header">
+                <!--header-->
+                @Html.Partial("Header")
+            </header>
+
+            @Html.Widget("content_before")
+
+            @if (IsSectionDefined("Breadcrumb"))
+            {
+                @RenderSection("Breadcrumb")
+            }
+
+            @RenderBody()
+        </div>
+        @Html.Widget("content_after")
+        @Html.Action("EuCookieLaw", "Common")
+    </div>
+    @Html.Action("Footer", "Common")
+</div>
+@Html.Widget("body_end_html_tag_before")
+

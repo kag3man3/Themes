@@ -1,0 +1,41 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model ForumGroupModel
+@using Nop.Web.Models.Boards;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne_SkyForms.cshtml";
+
+    //title
+    Html.AddTitleParts(Model.Name);
+    //page class
+    Html.AppendPageCssClassParts("html-forum-group-page");
+}
+
+@section Breadcrumb
+{
+    @Html.Action("ForumBreadcrumb", new { forumGroupId = Model.Id })
+}
+<div class="container">
+    <div class="page forum-group-page">
+        <div class="row" style="transform: none;">
+            <div class="col-md-9">
+                @Html.Widget("boards_forumgroup_after_header")
+                @Html.Partial("_ForumGroup", Model)
+                @Html.Widget("boards_forumgroup_bottom")
+            </div>
+            <div class="col-md-3">
+                @Html.Partial("_ForumHeader")
+                @Html.Action("ActiveDiscussionsSmall")
+            </div>
+        </div>
+    </div>
+</div>

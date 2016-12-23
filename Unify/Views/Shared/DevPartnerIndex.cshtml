@@ -1,0 +1,142 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@using DevPartner.Nop.Plugin.Core.Helpers
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using HttpUtility = System.Web.HttpUtility
+@model ProductView
+
+@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+      <!-- CSS Pages Style -->
+    Html.AppendCssFileParts("~/Themes/Unify/assets/css/pages/page_intro.css");
+    Html.AppendCssFileParts("~/Themes/Unify/assets/css/blocks.css");
+}
+
+<!--=== Promo Block ===-->
+@*<div class="interactive-slider-v2 intro-promo-img intro-promo-cover-dark parallaxBg">
+        <div class="container" data-start="opacity: 1;" data-320="opacity: 0;">
+            <h1 class="margin-bottom-30" style="font-size: 55px; letter-spacing: 5px;">UNIFY RESPONSIVE THEME</h1>
+            <p style="font-weight: normal; letter-spacing: 1px;">THE FASTEST AND EASIEST WAY TO START <br> NEW PROJECTS AND STARTUPS</p><br>
+            <a style="padding: 8px 25px; letter-spacing: 1px;" href="http://dev-partner.biz/demo.html" class="btn-u btn-brd btn-brd-hover btn-u-light rounded margin-right-10">START BROWSING</a>
+            <a style="padding: 8px 25px; letter-spacing: 1px;" href="http://shop.dev-partner.biz/nopcommerce-unify-theme" target="_blank" class="btn-u btn-brd btn-brd-hover btn-u-light rounded">PURCHASE NOW</a>
+
+            <!-- Social Block -->
+            <div class="section-socials">
+                <div class="section-social">
+                    <div class="section-social-title">Like Us on Facebook</div>
+                    <div class="section-social-button">
+                        <div class="fb-like" data-href="https://www.facebook.com/devpartnerbiz/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+                    </div>
+                </div>
+                <div class="section-social">
+                    <div class="section-social-title">Follow Us on Twitter</div>
+                    <div class="section-social-button">
+                        <a href="https://twitter.com/devpartnerbiz" class="twitter-follow-button" data-show-count="false"></a>
+                    </div>
+                </div>
+            </div>
+            <!-- End Social Block -->
+        </div>
+    </div>*@
+<!--=== End Promo Block ===-->
+
+<div class="container content-md">
+    @Html.Widget("main_column_before")
+
+    @Html.Partial("_DevPartnerSearchBar", Model)
+    @Html.Widget("home_page_top")
+    @Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
+
+    @Html.Action("HomepageProducts", "Product")
+    @Html.Widget("home_page_before_categories")
+    @Html.Action("HomepageCategories", "Catalog")
+    @Html.Widget("home_page_before_products")
+    @if (Model.QueryError)
+            {
+        <div class="warning">
+            Invalid query
+        </div>
+    }
+    <div class="filter-results">
+        <div class="row illustration-v2 margin-bottom-30">
+            @foreach (var p in Model.SearchProducts)
+            {
+                <div class="col-md-4">
+                    @Html.Partial("_DevPartnerProductBox", p)
+                </div>
+            }
+
+        </div>
+    </div>
+
+    @Html.Widget("home_page_before_best_sellers")
+    @Html.Action("HomepageBestSellers", "Product")
+    @Html.Widget("home_page_bottom")
+    @Html.Widget("main_column_after")
+</div>
+
+@Html.Widget("home_page_before_news")
+@Html.Action("HomePageNews", "News")
+@Html.Widget("home_page_before_poll")
+@Html.Action("HomePagePolls", "Poll")
+@Html.Widget("home_page_bottom")
+
+<script src="/Themes/Unify/assets/plugins/jquery.parallax.js"></script>
+<!-- Facebook Like -->
+<script>
+    window.fbAsyncInit = function () {
+        // init the FB JS SDK
+        FB.init({
+            appId: '1972702999621713',
+            status: true,
+            xfbml: true,
+            version: 'v2.3'
+        });
+        if (typeof gaSocialTracking != 'undefined') gaSocialTracking.trackFacebook();
+        setTimeout(function () {
+            if (typeof window.fbCallback == 'function') {
+                window.fbCallback();
+            }
+        }, 3000); // to make sure FB was loaded
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+<!-- /Facebook Like -->
+<!-- Twitter Follow -->
+<script>
+    window.twttr = (function (d, s, id) {
+        var t, js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+    }(document, "script", "twitter-wjs"));
+
+    twttr.ready(function (twttr) {
+        twttr.events.bind('tweet', function (event) {
+            if (typeof gaSocialTracking != 'undefined') gaSocialTracking.trackTwitter();
+        });
+    });
+</script>
+<!-- /Twitter Follow -->

@@ -1,0 +1,124 @@
+﻿@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using DevPartner.Nop.Plugin.Core.Helpers
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using HttpUtility = System.Web.HttpUtility
+@model ProductView
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Search").Text);
+    Html.AppendCssFileParts("~/Plugins/DevPartner.Misc.Search/Content/styles.css");
+
+}
+
+@section Breadcrumb
+    {
+    @{
+
+        KeyValuePair<string, string> breadcrumbFacet = Model.Search.Facets.FirstOrDefault(x => x.Key.ToString() == "category");
+        if (breadcrumbFacet.Key != null)
+        {
+            @Html.Action("CategoryBreadcrumb", breadcrumbFacet);
+        }
+    }
+}
+@section left
+{
+    @Html.Partial("_DevPartnerSearchBar", Model)
+}
+
+
+<div class="page search-page">
+    <div class="page-title">
+        <h1>@T("Search")</h1>
+    </div>
+    <div class="page-body">
+        @*@Html.Partial("_DevPartnerSearchParams", Model)*@
+        <script>
+            $(function () {
+                $('#small-searchterms').val('@Model.Search.FreeSearch');
+            });
+        </script>
+
+        @if (!string.IsNullOrEmpty(Model.DidYouMean))
+        {
+            <div>
+                Did you mean <strong><em><a href="@Url.ForQuery(Model.DidYouMean)">@Model.DidYouMean</a></em></strong>
+            </div>
+        }
+        @if (Model.SearchProducts.Count > 0)
+        {
+            @Html.Partial("_DevPartnerCatalogSelectors", Model, new ViewDataDictionary())
+        }
+
+        @Html.Widget("productsearch_page_before_results")
+        <div class="search-results">
+
+            @if (Model.QueryError)
+            {
+                <div class="warning">
+                    Invalid query
+                </div>
+            }
+            @*@if (!String.IsNullOrEmpty(Model.Warning))
+                {
+                    <div class="warning">
+                        @Model.Warning
+                    </div>
+                }*@
+            @if (Model.SearchProducts.Count == 0)
+            {
+                <div class="no-result">
+                    @T("Search.NoResultsText")
+                </div>
+            }
+            else
+            {
+                <div class="DP-products-count">
+                    @T("DevPartner.Search.ProductsCount", Model.TotalCount)
+                </div>
+            }
+
+            @*<div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">*@
+            <div class="product-list">
+                <div class="item-grid">
+                    @{
+                        var arr = Model.SearchProducts.ToArray();
+                        for (int i = 0; i < Model.SearchProducts.Count; i++)
+                        {
+                            if (i == 10)
+                            {
+                                <div class="DP-banner-catalog">
+                                    @Html.Action("TopicBlock", "Topic", new { systemName = "BannerSearchPage" })
+                                </div>
+                            }
+                            var p = arr[i];
+                            <div class="item-box">
+                                @Html.Partial("_DevPartnerProductBox", p)
+                            </div>
+                        }
+                    }
+                    @*@foreach (var p in Model.SearchProducts)
+                        {
+                            <div class="item-box">
+                                @Html.Partial("_DevPartnerProductBox", p)
+                            </div>
+                        }*@
+                </div>
+            </div>
+
+        </div>
+
+        @(Html.Partial("_DevPartnerPagination", new DevPartner.Nop.Plugin.Core.Models.PaginationInfo
+    {
+        PageUrl = Url.SetParameter("page", "!0"),
+        CurrentPage = Model.Search.PageIndex,
+        PageSize = Model.Search.PageSize,
+        TotalItemCount = Model.TotalCount,
+    }))
+
+    </div>
+</div>

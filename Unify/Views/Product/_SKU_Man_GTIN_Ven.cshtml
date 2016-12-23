@@ -1,0 +1,47 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+ *
+ * This file is part of DevPartner Unify Theme.
+ *
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+<div class="additional-details">
+    @*SKU*@
+    @if (!String.IsNullOrWhiteSpace(Model.Sku) && Model.ShowSku)
+    {
+        <div class="sku">
+            <span>@T("Products.Sku"):</span>
+            <span itemprop="sku" id="sku-@Model.Id">@Model.Sku</span>
+        </div>
+    }
+    @*Manufacturer part number*@
+    @if (!String.IsNullOrWhiteSpace(Model.ManufacturerPartNumber) && Model.ShowManufacturerPartNumber)
+    {
+        <div class="manufacturer-part-number">
+            <span>@T("Products.ManufacturerPartNumber"):</span>
+            <span class="value" id="mpn-@Model.Id">@Model.ManufacturerPartNumber</span>
+        </div>
+    }
+    @*GTIN*@
+    @if (!String.IsNullOrWhiteSpace(Model.Gtin) && Model.ShowGtin)
+    {
+        <div class="gtin">
+            <span>@T("Products.GTIN"):</span>
+            <span class="value" id="gtin-@Model.Id">@Model.Gtin</span>
+        </div>
+    }
+    @*Vendor*@
+    @if (Model.ShowVendor)
+    {
+        <div class="product-vendor">
+            <span>@T("Products.Vendor"):</span>
+            <span class="value"><a href="@Url.RouteUrl("Vendor", new { SeName = Model.VendorModel.SeName })">@Model.VendorModel.Name</a></span>
+        </div>
+    }
+</div>

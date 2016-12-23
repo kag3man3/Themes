@@ -1,0 +1,45 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model IList<CategoryModel>
+
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="row margin-bottom-50">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 md-margin-bottom-30">
+                <div class="overflow-h">
+                    <a href="@Url.RouteUrl("Category", new {SeName = item.SeName})" class="illustration-v3 illustration-img3"
+                       style="background-image: url(@item.PictureModel.ImageUrl);">
+                        <span class="illustration-bg">
+                            <span class="illustration-ads">
+                                <span class="illustration-v3-category">
+                                    <span class="product-category">@item.Name</span>
+                                    @if (item.Products.Any())
+                                    {
+                                        <span class="product-amount">@item.Products.Count</span>
+                                    }
+                                </span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+
+
+

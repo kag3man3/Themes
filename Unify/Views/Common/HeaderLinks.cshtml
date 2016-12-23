@@ -1,0 +1,64 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model HeaderLinksModel
+@using Nop.Web.Models.Common;
+
+@Html.Widget("header_links_before")
+
+@if (Model.IsAuthenticated)
+{
+    <li><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">@Model.CustomerEmailUsername</a></li>
+            <li><a href="@Url.RouteUrl("Logout")" class="ico-logout">@T("Account.Logout")</a></li>
+}
+else
+{
+    <li><a href="@Url.RouteUrl("Register")" class="ico-register">@T("Account.Register")</a></li>
+            <li><a href="@Url.RouteUrl("Login")" class="ico-login">@T("Account.Login")</a></li>
+}
+@if (Model.AllowPrivateMessages)
+{
+    <li>
+        <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">
+            <span class="inbox-label">@T("PrivateMessages.Inbox")</span>
+            <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+        </a>
+    </li>       
+
+}
+@if (Model.WishlistEnabled)
+{
+    <li>
+        <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
+            <span class="wishlist-label">@T("Wishlist")</span>
+            <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+        </a>
+    </li>
+}
+<li><i class="search fa fa-search search-button"></i></li>
+@if (Model.ShoppingCartEnabled)
+{
+    <li id="topcartlink" class="shoppingcart-link">
+        <a href="@Url.RouteUrl("ShoppingCart")"><i class="fa fa-shopping-cart"></i></a>
+        <span class="badge badge-sea rounded-x cart-qty">@Model.ShoppingCartItems</span>
+    </li>
+}
+@Html.Widget("header_links_after")
+
+@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+{
+    //new private message notification
+    <script type="text/javascript">
+        $(document).ready(function () {
+            displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))', 'success', false);
+        });
+    </script>
+}

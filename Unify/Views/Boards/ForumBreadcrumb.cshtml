@@ -1,0 +1,52 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ForumBreadcrumbModel
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Boards;
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+}
+<div class="container">
+    <ul class="breadcrumb-v5">
+        <li>
+            <a href="@Url.RouteUrl("HomePage")" title="@T("Forum.Breadcrumb.HomeTitle")"><i class="fa fa-home"></i>@T("Forum.Home")</a>
+        </li>
+        <li>
+            @Html.RouteLink(T("Forum.Forums").Text, "Boards", null, new { title = T("Forum.Breadcrumb.ForumHomeTitle") })
+        </li>
+        @if (Model.ForumGroupId > 0)
+            {
+            <li>
+                @Html.RouteLink(Model.ForumGroupName, "ForumGroupSlug",
+                new { id = Model.ForumGroupId, slug = Model.ForumGroupSeName },
+                new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumGroupTitle"), Model.ForumGroupName) })
+            </li>
+        }
+        @if (Model.ForumId > 0)
+            {
+            <li class="@(Model.ForumTopicId > 0 ? "active" : "")">
+                @Html.RouteLink(Model.ForumName, "ForumSlug",
+                new { id = Model.ForumId, slug = Model.ForumSeName },
+                new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumTitle"), Model.ForumName) })
+            </li>
+        }
+        @if (Model.ForumTopicId > 0)
+            {
+            <li class="active">
+                @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug",
+                new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName },
+                new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.TopicTitle"), Model.ForumTopicSubject) })
+            </li>
+        }
+    </ul>
+</div>

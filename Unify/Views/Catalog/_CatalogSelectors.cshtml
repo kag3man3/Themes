@@ -1,0 +1,58 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model CatalogPagingFilteringModel
+@using Nop.Web.Models.Catalog;
+
+<style>
+    .sort-list-btn .dropdown-menu {
+        display: block;
+        position: inherit;
+        
+        min-width: 60px;
+        color: #999;
+        font-size: 13px;
+    }
+</style>
+
+
+@if (Model.AllowProductViewModeChanging)
+{
+    if (Model.AvailableViewModes.Count > 1)
+    {
+        var gridMode = Model.AvailableViewModes[0];
+        var listMode = Model.AvailableViewModes[1];
+
+        <li class="grid-list-icons">
+            @*@T("Catalog.ViewMode")*@
+            <a href="@listMode.Value" title="@listMode.Text"><i class="fa fa-th-list"></i></a>
+            <a href="@gridMode.Value" title="@gridMode.Text"><i class="fa fa-th"></i></a>
+        </li>
+    }
+}
+@if (Model.AllowProductSorting)
+{
+    <li class="sort-list-btn">
+        <h3>@T("Catalog.OrderBy"):</h3>
+        <div class="btn-group">            
+            @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { @class = "dropdown-menu", @role = "menu", onchange = "setLocation(this.value);" })
+        </div>
+    </li>
+}
+@if (Model.AllowCustomersToSelectPageSize)
+{
+    <li class="sort-list-btn">
+        <h3>@T("Catalog.PageSize"):</h3>
+        <div class="btn-group">
+            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "dropdown-menu", @role = "menu", onchange = "setLocation(this.value);" })
+        </div>
+    </li>
+}

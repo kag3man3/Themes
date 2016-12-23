@@ -1,0 +1,38 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ManufacturerNavigationModel
+@using Nop.Web.Models.Catalog;
+@if (Model.Manufacturers.Count > 0)
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" href="#collapseManufacturers">
+                        @T("Manufacturers")
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapseManufacturers" class="panel-collapse collapse in">
+                <ul class="list-group sidebar-nav-v1">
+                    @foreach (var manufacturer in Model.Manufacturers)
+                    {
+                        <li class="list-group-item @(manufacturer.IsActive ? "active" : "")">
+                            <a href="@Url.RouteUrl("Manufacturer", new {SeName = manufacturer.SeName})">@manufacturer.Name</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}

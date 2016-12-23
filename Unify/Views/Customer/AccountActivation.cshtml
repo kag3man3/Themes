@@ -1,0 +1,33 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model AccountActivationModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.AccountActivation").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-activation-page");
+}
+<div class="page account-activation-page">
+    <div class="panel panel-default form-panel">
+    <div class="panel-heading">
+        <h3>@T("Account.AccountActivation")</h3>
+    </div>
+        <div class="panel-body">
+            <strong>
+                @Model.Result
+            </strong>
+        </div>
+    </div>
+</div>

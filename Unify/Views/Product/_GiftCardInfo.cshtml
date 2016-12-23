@@ -1,0 +1,65 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ProductDetailsModel.GiftCardModel
+@using Nop.Web.Models.Catalog;
+@if (Model.IsGiftCard)
+{
+    
+    <div class="giftcard">
+        <div class="form-group row">
+            <div class="col-md-4">
+                 @Html.LabelFor(model => model.RecipientName, new { }, ":")               
+            </div>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.RecipientName, new { @class = "recipient-name " })
+            </div>
+        </div>
+        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        {
+            <div class="form-group row">
+                <div class="col-md-4">
+                    @Html.LabelFor(model => model.RecipientEmail, new { }, ":")           
+                </div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipient-email" })
+                </div>
+            </div>
+        }
+        <div class="form-group row">
+                <div class="col-md-4">
+                    @Html.LabelFor(model => model.SenderName, new { }, ":")         
+                </div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.SenderName, new { @class = "sender-name " })
+                </div>
+            </div>
+        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        {
+            <div class="form-group row">
+                <div class="col-md-4">
+                    @Html.LabelFor(model => model.SenderEmail, new { }, ":")        
+                </div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.SenderEmail, new { @class = "sender-email " })
+                </div>
+            </div>
+        }
+        <div class="form-group row">
+                <div class="col-md-4">
+                    @Html.LabelFor(model => model.Message, new { }, ":")     
+                </div>
+                <div class="col-md-8">
+                    @Html.TextAreaFor(model => model.Message, new { @class = "", rows="5",cols="2" })
+                </div>
+            </div>
+    </div>
+}
