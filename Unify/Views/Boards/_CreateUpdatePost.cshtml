@@ -1,0 +1,72 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model EditForumPostModel
+@using Nop.Core.Domain.Forums;
+@using Nop.Web.Models.Boards;
+@{
+    //page class
+    Html.AppendPageCssClassParts("html-forum-edit-page");
+}
+<div id="comment-form">
+    <div class="sky-form sky-changes-4">
+        <header>
+            @if (Model.IsEdit)
+            {
+                @T("Forum.EditPost")
+            }
+            else
+            {
+                @T("Forum.NewPost")
+            }
+        </header>
+        @using (Html.BeginForm())
+            {
+            @Html.AntiForgeryToken()
+            var validationSummary = Html.ValidationSummary(true);
+            if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            {
+                <div class="message-error">@validationSummary</div>
+            }
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.ForumTopicId)
+                <fieldset>
+                    <section>
+                        <label class="label">@T("Forum.ForumName"):<strong>@Model.ForumName</strong></label>
+
+                        <label class="label">@T("Forum.TopicTitle"): <strong>@Model.ForumTopicSubject</strong></label>
+                        <div class="inline-group">
+                            @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                            {
+                                @Html.BBCodeEditor("Text")
+                            }
+                        </div>
+                        <label class="textarea">
+                            @Html.TextAreaFor(model => model.Text, new { TextMode = "MultiLine", Rows = 10 })
+                        </label>
+                        @Html.ValidationMessageFor(model => model.Text)
+                        @if (Model.IsCustomerAllowedToSubscribe)
+                        {   
+                            <div class="inline-group">
+                                <label @*class="checkbox"*@>@Html.EditorFor(model => model.Subscribed)<i></i>@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
+                            </div>
+                        }
+
+                    </section>
+                </fieldset>
+                <footer>
+                    <input type="submit" value="@T("Forum.Submit")" class="btn-u" />
+                    <input type="button" class="btn-u btn-u-default" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
+                </footer>
+
+        }
+    </div>
+</div>

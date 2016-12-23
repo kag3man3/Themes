@@ -1,0 +1,32 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@using Nop.Core.Infrastructure
+@using Nop.Services.Helpers
+@{
+    var dateTimeHelper = EngineContext.Current.Resolve<IDateTimeHelper>();
+}
+
+<div class="headline headline-md"><h2>@T("Search")</h2></div>
+@using (Html.BeginRouteForm("Search", FormMethod.Get))
+{
+    <div class="margin-bottom-40">
+        <div class="input-group">
+            <input type="text" class="form-control" id="forums-small-searchterms" name="searchterms" placeholder="@T("Forum.SearchForumsTooltip")">
+            <span class="input-group-btn">
+                <button class="btn-u" type="button">Go</button>
+            </span>
+        </div>
+        <div class="advanced">
+            @Html.RouteLink(T("Forum.AdvancedSearch").Text, "Search", new { adv = true }, new { title = T("Forum.AdvancedSearch").Text })
+        </div>
+    </div>
+}

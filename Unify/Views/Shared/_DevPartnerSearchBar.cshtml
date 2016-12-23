@@ -1,0 +1,109 @@
+﻿@model ProductView
+
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+
+<style TYPE="text/css">
+#goSearching {
+  text-align: right;
+}
+</style>
+
+<div class="panel-group">
+
+        <div class="panel panel-default">
+            <form id="searchForm">
+                <div class="panel-heading">
+                    <h2 class="panel-title" align=right margin=right>
+                        <a>
+                            <label class="input full-width">
+                                <input class="form-control" name="q" id="q" placeholder="Search keywords" type="text" value=@Model.Search.FreeSearch />
+                            </label>
+                            <span data-toggle="collapse" href="#search">
+                                Advance search &nbsp;
+                                <i class="fa fa-angle-down"></i>
+                            </span>
+                        </a>
+                    </h2>
+                </div>
+                <div id="search" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="list-unstyled checkbox-list">
+                            <li>
+                                <label for="amount"><b>Price range:</b></label>
+                                <input type="text" id="amount" readonly style="border:0; color:#999;" />
+                                <div id="slider-range"></div>
+                                <input id="qbr_price_min" name="qbr_price_min" value="1" type="hidden" />
+                                <input id="qbr_price_max" name="qbr_price_max" value ="3000" type="hidden" />
+                            </li>
+                            <li>
+                                <label> <b>Category</b> </label></br>
+                                @foreach (var f in Model.Facets.Where(x => x.Key.ToString() == "category").FirstOrDefault().Value)
+                                {
+                                    <input type="checkbox" name="qb_category" value=@f.Key id=@f.Key>
+                                    <label for=@f.Key> @f.Key.Substring(f.Key.IndexOf("_") + 1).Replace("+", " ") (@f.Value)</label>
+                                }
+                            </li>
+                            <li>
+                                @foreach (var facet in Model.Facets.Where(x => x.Key.ToString() != "breadcrumb" && x.Key.ToString() != "category"))
+                                {
+                                    <label> <b>@System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(facet.Key.Split('_').Last())</b> </label>
+                                    <label class="input full-width">
+                                        <select name=qb_@facet.Key>
+                                            @foreach (var field in facet.Value)
+                                            {
+                                                <option value="@field.Key"> @field.Key.Replace("+", " ") (@field.Value)</option>
+                                            }
+                                        </select>
+                                        <i></i>
+                                    </label>
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+            <div id="goSearching">    
+                <a id="searchButton" class="btn btn-default" href="" role="button">Search</a>
+            </div>
+            </div>
+        </div>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+
+<script>
+    rootUrl = "@Url.Content("~/")" + "search?";
+    function showValues() {
+        var str = $("#searchForm").serialize();
+        $("#results").text(str);
+        var frm = document.getElementById('searchButton') || null;
+        if(frm) {
+            frm.href = rootUrl + str
+        }
+    }
+    $("input[type='checkbox'], input[type='radio']" ).on( "click", showValues );
+    $("select").on("change", showValues );
+    $("#q").keyup(showValues);
+    showValues();
+
+    $(function sliderRange() {
+        $("#slider-range").slider({
+            range: true,
+            min: 1,
+            max: 3000,
+            values: [1, 3000],
+            slide: function (event, ui) {
+                $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
+                $("#qbr_price_min").val(ui.values[0]);
+                $("#qbr_price_max").val(ui.values[1]);
+                showValues();
+            }
+        });
+        $("#amount").val("£" + $("#slider-range").slider("values", 0) + " - £" + $("#slider-range").slider("values", 1));
+        $("#qbr_price_min").val($("#slider-range").slider("values", 0));
+        $("#qbr_price_max").val($("#slider-range").slider("values", 1));
+
+    });
+
+</script>
+
+

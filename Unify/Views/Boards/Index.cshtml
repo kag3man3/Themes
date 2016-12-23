@@ -1,0 +1,47 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model BoardsIndexModel
+@using Nop.Web.Models.Boards;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-forums-main-page");
+}
+
+@section Breadcrumb
+{
+    <div class="breadcrumbs-v4">
+        <div class="container">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
+        </div>
+    </div>
+}
+<div class="page forums-main-page">
+    <div class="row" style="transform: none;">
+        <div class="col-md-9">
+            @Html.Widget("boards_main_after_header")
+            @foreach (var forumGroup in Model.ForumGroups)
+            {
+                Html.RenderPartial("_ForumGroup", forumGroup);
+            }
+        </div>
+        <div class="col-md-3 hidden-xs hidden-sm" id="forum-sidebar">
+            @Html.Partial("_ForumHeader")
+            @Html.Widget("boards_main_before_activediscussions")
+            @Html.Action("ActiveDiscussionsSmall")
+            @Html.Widget("boards_main_after_activediscussions")
+        </div>
+    </div>
+</div>

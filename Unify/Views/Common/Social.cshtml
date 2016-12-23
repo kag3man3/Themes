@@ -1,0 +1,48 @@
+﻿@model Nop.Web.Models.Common.SocialModel
+<ul class="list-inline shop-social">
+    @if (!string.IsNullOrEmpty(Model.FacebookLink))
+    {
+        <li>
+            <a href="@Model.FacebookLink" target="_blank">
+                <i class="fb rounded-md fa fa-facebook"></i>
+                @*@T("Footer.FollowUs.Facebook")*@
+            </a>
+        </li>
+    }
+    @if (!string.IsNullOrEmpty(Model.TwitterLink))
+    {
+        <li>
+            <a href="@Model.TwitterLink" target="_blank">
+                <i class="tw rounded-md fa fa-twitter"></i>
+                @*@T("Footer.FollowUs.Twitter")*@
+            </a>
+        </li>
+    }
+    @if (Model.NewsEnabled)
+    {
+        <li>
+            <a href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})">
+                <i class="rs rounded-md fa fa-rss"></i>
+                @*@T("Footer.FollowUs.RSS")*@
+            </a>
+        </li>
+    }
+    @if (!string.IsNullOrEmpty(Model.YoutubeLink))
+    {
+        <li>
+            <a href="@Model.YoutubeLink" target="_blank">
+                <i class="yt rounded-md fa fa-youtube"></i>
+                @*@T("Footer.FollowUs.Youtube")*@
+            </a>
+        </li>
+    }
+    @if (!string.IsNullOrEmpty(Model.GooglePlusLink))
+    {
+        <li>
+            <a href="@Model.GooglePlusLink" target="_blank">
+                <i class="gp rounded-md fa fa-google-plus"></i>
+                @*@T("Footer.FollowUs.GooglePlus")*@
+            </a>
+        </li>
+    }
+</ul>

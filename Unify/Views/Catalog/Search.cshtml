@@ -1,0 +1,234 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model SearchModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Search").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-search-page");
+}
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Extensions;
+@using DevPartner.Nop.Plugin.Core.Helpers;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //3.5 to 3.6
+        //as to adv
+        $("#@Html.FieldIdFor(model => model.adv)").click(toggleAdvancedSearch);
+
+
+        toggleAdvancedSearch();
+    });
+
+    function toggleAdvancedSearch() {
+
+        if ($('#@Html.FieldIdFor(model => model.adv)').is(':checked')) {
+            $('#advanced-search-block').show();
+        }
+        else {
+            $('#advanced-search-block').hide();
+        }
+    }
+</script>
+
+@section left
+{
+    @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
+    {
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" href="#search">
+                            @T("Search")
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="search" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="list-unstyled checkbox-list">
+                            <li>
+                                <label class="input full-width">
+                                    @Html.TextBoxFor(model => model.q, new { @class = "form-control", placeholder = T("Search.SearchTerm").Text })
+                                </label>
+                            </li>
+                            <li>
+                                @Html.CheckBoxFor(model => model.adv)
+                                @Html.LabelFor(model => model.adv, new { })
+                                @*<label class="checkbox">
+                                    <input id="adv" type="checkbox" name="adv" />
+                                    <i></i>
+                                    @T("Search.AdvancedSearch")
+                                </label>*@
+                            </li>
+                            <li>
+                                <input type="submit" class="btn-u btn-u-sea-shop btn-u-lg btn-block pull-right" value="@T("Search")" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="advanced-search-block">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a data-toggle="collapse" href="#advancedsearch">
+                                @T("Search.AdvancedSearch")
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="advancedsearch" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <ul class="list-unstyled checkbox-list">
+                                @if (Model.AvailableCategories.Count > 0)
+                                {
+                                    <li class="full-width">
+                                        @Html.LabelFor(model => model.cid, new { @class = "" }, ":")
+                                        @Html.DropDownListFor(model => model.cid, Model.AvailableCategories, new { @class = "form-control" })
+                                    </li>
+                                    <li>
+                                        @Html.CheckBoxFor(model => model.isc)
+                                        @Html.LabelFor(model => model.isc, new { })
+                                        @*<label class="checkbox">
+                                            @Html.CheckBoxFor(model => model.isc)
+                                            <input id="isc" type="checkbox" name="isc" />
+                                            <i></i>
+                                            @T("Search.IncludeSubCategories")
+                                        </label>*@
+                                    </li>
+                                }
+                                @if (Model.AvailableManufacturers.Count > 0)
+                                {
+                                    <li>
+                                        @Html.LabelFor(model => model.mid, new { @class = "" }, ":")
+                                        @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers, new { @class = "form-control" })
+                                    </li>
+                                }
+                                <li>
+                                    @Html.CheckBoxFor(model => model.sid)
+                                    @Html.LabelFor(model => model.sid, new { })
+                                    @*<label class="checkbox">
+                                        <input id="sid" type="checkbox" name="sid" />
+                                        <i></i>
+                                        @T("Search.SearchInDescriptions")
+                                    </label>*@
+                                </li>
+                            </ul>
+                            @Html.Widget("productsearch_page_advanced")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a data-toggle="collapse" href="#pricerange">
+                                @T("Search.PriceRange")
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="pricerange" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <ul class="list-unstyled checkbox-list">
+                                <li>
+                                    <label class="full-width">
+                                        @T("Search.PriceRange.From")
+                                        @Html.TextBoxFor(model => model.pf, new { @class = "form-control", placeholder = T("Search.PriceRange.From").Text })
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="full-width">
+                                        @T("Search.PriceRange.To")
+                                        @Html.TextBoxFor(model => model.pt, new { @class = "form-control", placeholder = T("Search.PriceRange.To").Text })
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="row margin-bottom-5">
+    <div class="col-sm-12 result-category">
+        <h2>@T("Search")</h2>
+    </div>
+</div>
+
+@if (!String.IsNullOrEmpty(Model.Warning))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="custom-page-box-border-less-div">
+                <div class="alert alert-info square-box">
+                    @Model.Warning
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.NoResults)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="custom-page-box-border-less-div">
+                <div class="alert alert-danger square-box">
+                    @T("Search.NoResultsText")
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Products.Count > 0)
+{
+    <div class="filter-results">
+        @for (var i = 0; i < Model.Products.Count; i += 3)
+                {
+                    var productsInRowCount = (i + 3 <= Model.Products.Count) ? 3 : Model.Products.Count - i;
+                    var products = Model.Products.ToList().GetRange(i, productsInRowCount);
+
+            <div class="row illustration-v2 margin-bottom-30">
+                @foreach (var product in products)
+                {
+                    <div class="col-md-4">
+                        @Html.Partial("_ProductBox", product)
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+
+
+
+@(Html.Partial("_DevPartnerPagination", new DevPartner.Nop.Plugin.Core.Models.PaginationInfo
+{
+    PageUrl = Url.SetParameter("pagenumber", "!0"),
+    CurrentPage = Model.PagingFilteringContext.PageIndex + 1,
+    PageSize = Model.PagingFilteringContext.PageSize,
+    TotalItemCount = Model.PagingFilteringContext.TotalPages,
+}))

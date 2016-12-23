@@ -1,0 +1,82 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ApplyVendorModel
+@using Nop.Web.Models.Vendors;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-apply-vendor-page");
+}
+<div class="page apply-vendor-page">
+    <div class="page-title">
+        <h1>@T("PageTitle.Vendors.Apply")</h1>
+    </div>
+    <div class="page-body">
+        @Html.Action("TopicBlock", "Topic", new { systemName = "ApplyVendor" })
+        @Html.Widget("applyvendor_top")
+        @if (Model.DisableFormInput)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            using (Html.BeginForm(null, null, FormMethod.Post, new RouteValueDictionary { { "enctype", "multipart/form-data" } }))
+            {
+                @Html.AntiForgeryToken()
+                var validationSummary = Html.ValidationSummary(true);
+                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div> 
+                }
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Name)
+                            @Html.TextBoxFor(model => model.Name, new { @class = "name", placeholder = T("Vendors.ApplyAccount.Name.Hint") })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Email)
+                            @Html.TextBoxFor(model => model.Email, new {@class = "email", placeholder = T("Vendors.ApplyAccount.Email.Hint")})
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Description)
+                            @Html.TextAreaFor(model => model.Description, new { @class = "description" })
+                        </div>
+                        <div class="inputs">
+                            @Html.Label(T("Vendors.ApplyAccount.Picture").Text)
+                            <input name="uploadedFile" type="file" />
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="send-email" class="button-1 apply-vendor-button btn btn-default"  value="@T("Vendors.ApplyAccount.Button")" />
+                </div>
+            }
+        }
+        @Html.Widget("applyvendor_bottom")
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿@using DevPartner.Nop.Plugin.Misc.Search
+@using DevPartner.Nop.Plugin.Core.Helpers
+@using Nop.Core.Domain.Common
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using HttpUtility = System.Web.HttpUtility
+@using DevPartner.Nop.Plugin.Misc.Search.Services;
+@using Nop.Services.Localization;
+@using Nop.Core;
+@model KeyValuePair<string, string>
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var settingService = EngineContext.Current.Resolve<ISettingService>();
+    var localizedEntityService = (DevPartnerLocalizedEntityService) EngineContext.Current.Resolve<ILocalizedEntityService>();
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var delimiter = settingService.LoadSetting<DevPartnerSearchSetting>().CategoryNameDelimiter;
+    var breadcrumbArr = Model.Value.Split(delimiter.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+    var breadcrumbIds = breadcrumbArr.ToIdList(delimiter);
+    var localizedProperties = localizedEntityService.GetLocalizedProperties(breadcrumbIds, "category", workContext.WorkingLanguage.Id);
+}
+
+@{
+    <div class="breadcrumb">
+        <ul>
+            <li>
+                <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+                <span class="delimiter">@breadcrumbDelimiter</span>
+            </li>
+            @for (int i = 0; i < breadcrumbArr.Length; i++)
+            {
+                var nameWithId = breadcrumbArr[i];
+                var index = nameWithId.IndexOf("_", StringComparison.Ordinal);
+                var name = nameWithId;
+                var id = -1;
+                if (index != -1)
+                {
+                    name = nameWithId.Substring(index+1);
+                    int.TryParse(nameWithId.Substring(0, index), out id);
+                }
+                var prop = localizedProperties.FirstOrDefault(x => x.EntityId == id);
+                if (prop != null)
+                {
+                    name = prop.LocaleValue;
+                }
+                var path = String.Join(delimiter, breadcrumbArr.Take(i + 1));
+                <li>
+                    @if ((i + 1) == breadcrumbArr.Length)
+                    {
+                        <strong class="current-item">@HttpUtility.UrlDecode(name)</strong>
+                    }
+                    else
+                    {
+                        <a href="@Url.SetFacet("breadcrumb", path)" title="@path">@HttpUtility.UrlDecode(@name)</a>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    }
+                </li>
+            }
+
+        </ul>
+    </div>
+}

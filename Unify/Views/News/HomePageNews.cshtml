@@ -1,0 +1,93 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model HomePageNewsItemsModel
+@using Nop.Web.Models.News;
+@if (Model.NewsItems.Count > 0)
+{
+    <div class="parallaxBg twitter-block margin-bottom-60">
+        <div class="container">
+            <div class="heading heading-v1 margin-bottom-20">
+                <h2>@T("News")</h2>
+            </div>
+            <div id="carousel-homepage-news" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    @for (int i = 0; i < Model.NewsItems.Count; i++)
+                    {
+                        <li class="rounded-x @(i == 0 ? "active" : "")" data-target="#carousel-homepage-news" data-slide-to="@i"></li>
+                    }
+                </ol>
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.NewsItems.Count; i++)
+                    {
+                        var item = Model.NewsItems[i];
+
+                        <div class="item @(i == 0 ? "active" : "")">
+                            <p>
+                                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                    @item.Title
+                                </a>
+                            </p>
+                            <p>@Html.Raw(item.Short)</p>
+                            <p>
+                                <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>
+                            </p>
+                        </div>
+                    }
+                </div>
+                <div class="carousel-arrow">
+                    <a class="left carousel-control" href="#carousel-homepage-news" data-slide="prev">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-homepage-news" data-slide="next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    @*@if (Model.NewsItems.Count > 0)
+        {
+            <div class="blog-post-area">
+                <h2 class="title text-center">@T("News")</h2>
+                <div class="custom-page-box-div">
+                    @foreach (var item in Model.NewsItems)
+                    {
+                        <div class="single-blog-post">
+                            <h3>
+                                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                    @item.Title
+                                </a>
+                            </h3>
+                            <div class="post-meta">
+                                <ul>
+                                    <li><i class="fa fa-clock-o"></i> @item.CreatedOn.ToString("T")</li>
+                                    <li><i class="fa fa-calendar"></i> @item.CreatedOn.ToString("D")</li>
+                                </ul>
+                            </div>
+                            <p>@Html.Raw(item.Short)</p>
+                            <a class="btn btn-primary" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>
+                        </div>
+                        <br />
+                        <legend></legend>
+
+                    }
+                    <div class="view-all pull-text-right">
+                        <a href="@Url.RouteUrl("NewsArchive")" class="btn btn-primary">
+                            @T("News.ViewAll")
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <br />
+        }*@

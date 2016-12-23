@@ -1,0 +1,128 @@
+﻿@using System.Collections
+@using DevPartner.Nop.Plugin.Misc.Search
+@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using System.Linq
+@using DevPartner.Nop.Plugin.Misc.Search.Services
+@using Nop.Core
+@using Nop.Core.Domain.Localization
+@using Nop.Core.Domain.Seo
+@using Nop.Services.Catalog
+@using Nop.Services.Localization
+@using Nop.Services.Seo
+
+@model KeyValuePair<string, ICollection<KeyValuePair<string, int>>>
+@{
+    var settingService = EngineContext.Current.Resolve<ISettingService>();
+    var searchSettings = settingService.LoadSetting<DevPartnerSearchSetting>();
+    var categoryService = EngineContext.Current.Resolve<ICategoryService>();
+    DevPartnerUrlRecordService urlRecordService = (DevPartnerUrlRecordService)EngineContext.Current.Resolve<IUrlRecordService>();
+    DevPartnerLocalizedEntityService localizedEntityService = (DevPartnerLocalizedEntityService)EngineContext.Current.Resolve<ILocalizedEntityService>();
+    IWorkContext workContext = EngineContext.Current.Resolve<IWorkContext>();
+    //current category ID
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("devpartnercatalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("devpartnercategory", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+
+    //current product ID
+    int currentProductId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    }
+    //get active category
+    int activeCategoryId = 0;
+    if (currentCategoryId > 0)
+    {
+        //category details page
+        activeCategoryId = currentCategoryId;
+    }
+    else if (currentProductId > 0)
+    {
+        //product details page
+        var productCategories = categoryService.GetProductCategoriesByProductId(currentProductId);
+        if (productCategories.Count > 0)
+        {
+            activeCategoryId = productCategories[0].CategoryId;
+        }
+    }
+    var tree = Model.Value.ToTree(searchSettings.CategoryNameDelimiter);
+    var list = Model.Value.ToCategoryList(searchSettings.CategoryNameDelimiter);
+    var slugs = urlRecordService.GetActiveSlugs(list, "Category");
+    var localizedProperties = localizedEntityService.GetLocalizedProperties(list, "Category");
+    var languageId = workContext.WorkingLanguage.Id;
+}
+
+<div class="block">
+    <div class="title">
+        <strong>@T("DevPartner.Search." + Html.SolrFieldPropName<SearchProduct>(Model.Key))</strong>
+    </div>
+    <div class="listbox">
+        <ul class="list">
+            @{
+                foreach (var node in tree.Children)
+                {
+                    @RenderCategoryLine(node, searchSettings, activeCategoryId, slugs, localizedProperties, languageId)
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+@helper RenderCategoryLine(NTree<KeyValuePair<string, int>> node, DevPartnerSearchSetting settings, int activeCategoryId, IList<UrlRecord> slugs, IList<LocalizedProperty> localizedProperties, int languageId)
+{
+string nameWithId = node.Data.Key.Split(settings.CategoryNameDelimiter).Last();
+var index = nameWithId.IndexOf("_", StringComparison.Ordinal);
+var name = nameWithId;
+var id = -1;
+if (index != -1)
+{
+    name = nameWithId.Substring(index + 1);
+    int.TryParse(nameWithId.Substring(0, index), out id);
+}
+var prop = localizedProperties.Where(x => x.EntityId == id && x.LanguageId == languageId).ToList();
+if (prop != null)
+{
+
+}
+var isCurrent = id == activeCategoryId;
+
+//get slug
+var catSlugs = slugs.Where(x => x.EntityId == id).ToList();
+var langSlug = catSlugs.FirstOrDefault(x => x.LanguageId == languageId);
+string url = "";
+if (langSlug != null)
+{
+    url = langSlug.Slug;
+}
+else
+{
+    var defaultSlug = catSlugs.FirstOrDefault(x => x.LanguageId == 0);
+    if (defaultSlug != null)
+    {
+        url = defaultSlug.Slug;
+    }
+}
+
+    <li class="@(isCurrent?"active last":"inactive")">
+        <a href="@url">@HttpUtility.UrlDecode(name)</a> <span>(@node.Data.Value)</span>
+
+        @if (node.Children.Count > 0 && isCurrent)
+    {
+            <ul class="sublist">
+                @foreach (var subNode in node.Children)
+                {
+                    @RenderCategoryLine(subNode, settings, activeCategoryId, slugs, localizedProperties, languageId)
+                }
+            </ul>
+        }
+    </li>
+}

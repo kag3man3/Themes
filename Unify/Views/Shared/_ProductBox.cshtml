@@ -1,0 +1,140 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model ProductOverviewModel
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Web.Extensions
+@using Nop.Web.Models.Catalog;
+
+
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, });
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+}
+
+<div class="product-item product-box" data-productid="@Model.Id">
+    <div class="product-img product-img-brd">
+        <a href="@Url.RouteUrl("Product", new {SeName = Model.SeName})">
+            <img class="full-width img-responsive" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+        </a>
+        @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+        {
+            @*<a class="product-review" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">
+                    @string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)
+                </a>*@
+            <a class="product-review" href="@string.Format("{0}#reviews", Url.RouteUrl("Product", new { SeName = Model.SeName }))">
+                @string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)
+            </a>
+        }
+        @*<a class="product-review" href="shop-ui-inner.html">Quick review</a>*@
+        @if (!Model.ProductPrice.DisableBuyButton)
+        {
+            var addToCartText = T("ShoppingCart.AddToCart").Text;
+            if (Model.ProductPrice.IsRental)
+            {
+                addToCartText = T("ShoppingCart.Rent").Text;
+            }
+            if (Model.ProductPrice.AvailableForPreOrder)
+            {
+                addToCartText = T("ShoppingCart.PreOrder").Text;
+            }
+            <a class="add-to-cart" href="" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink'); return false;"><i class="fa fa-shopping-cart"></i>@addToCartText</a>
+        }
+        @*<div class="shop-rgba-red rgba-banner">@T("Products.Availability.OutOfStock")</div>*@
+        @if (Model.MarkAsNew)
+        {
+            <div class="shop-rgba-dark-green rgba-banner">@T("Products.NewProducts")</div>
+        }
+    </div>
+    <div class="product-description product-description-brd">
+        <div class="overflow-h margin-bottom-5">
+            <div class="pull-left">
+                <h4 class="title-price">
+                    <a href="@Url.RouteUrl("Product", new {SeName = Model.SeName})">
+                        @Model.Name
+                    </a>
+                </h4>
+                @*<span class="gender text-uppercase">category</span>*@
+                @*<span class="gender text-uppercase">@Model.SeName</span>*@
+                @*@if (!String.IsNullOrEmpty(Model.ShortDescription))
+                {
+                    <span class="gender">
+                        @Model.ShortDescription
+                    </span>
+                }*@
+            </div>
+            <div class="product-price">
+                <span class="title-price">@Model.ProductPrice.Price</span>
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                {
+                    <span class="title-price line-through">@Model.ProductPrice.OldPrice</span>
+                }
+                @if (Model.ProductPrice.DisplayTaxShippingInfo)
+                {
+                    var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                    <span class="tax-shipping-info">
+                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                    </span>
+                }
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                {
+                    <div class="base-price-pangv">
+                        @Model.ProductPrice.BasePricePAngV
+                    </div>
+                }
+            </div>
+        </div>
+        <ul class="list-inline product-ratings">
+            @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+            {
+                var selectedRatingStars = 0;
+                if (Model.ReviewOverviewModel.TotalReviews != 0)
+                {
+                    selectedRatingStars = Model.ReviewOverviewModel.RatingSum / Model.ReviewOverviewModel.TotalReviews;
+                }
+
+                for (var i = 0; i < selectedRatingStars; i++)
+                {
+                    <li><i class="rating-selected fa fa-star"></i></li>
+                }
+                for (var i = selectedRatingStars; i < 5; i++)
+                {
+                    <li><i class="rating fa fa-star"></i></li>
+                }
+            }
+            @if (!Model.ProductPrice.DisableWishlistButton)
+            {
+                <li class="like-icon"><a data-original-title="@T("ShoppingCart.AddToWishlist")" data-toggle="tooltip" data-placement="left" class="tooltips" href="" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;"><i class="fa fa-heart"></i></a></li>
+            }
+            @if (!Model.ProductPrice.DisableAddToCompareListButton)
+            {
+                <li class="like-icon"><a data-original-title="@T("ShoppingCart.AddToCompareList")" data-toggle="tooltip" data-placement="left" class="tooltips" href="" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;"><i class="fa fa-exchange"></i></a></li>
+            }
+        </ul>
+    </div>
+</div>
+

@@ -1,0 +1,40 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+
+    Html.AppendCssFileParts("~/Themes/Unify/assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css");
+    <!-- CSS Implementing Plugins -->
+    Html.AppendCssFileParts("~/Themes/Unify/assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css");
+
+    Html.AppendScriptParts("~/Themes/Unify/assets/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Themes/Unify/assets/plugins/sky-forms-pro/skyforms/js/jquery.form.min.js");
+
+}
+
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
+    }
+}
+
+<div @*class="container"*@>
+    @Html.Widget("main_column_before")
+    @RenderBody()
+    @Html.Widget("main_column_after")
+</div>
+
+
+
+
+	

@@ -1,0 +1,60 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model IList<ProductOverviewModel>
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" href="#collapseRecentlyViewedProducts" class="clearfix">
+                        <span class="title">
+                            @T("Products.RecentlyViewedProducts")
+                        </span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapseRecentlyViewedProducts" class="panel-collapse collapse in">
+                <ul class="list-group sidebar-nav-v1">
+                    @foreach (var product in Model)
+                    {
+                        <li class="list-group-item">
+                            <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">@product.Name</a>
+                        </li>
+                    }
+                </ul>
+                @*<div class="panel-body illustration-v4">
+                        @foreach (var product in Model)
+                        {
+                            <div class="thumb-product">
+                                <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">
+                                    <img class="thumb-product-img" alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                                </a>
+                                <div class="thumb-product-in">
+                                    <h4>
+                                        <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">
+                                            @product.Name
+                                        </a>
+                                    </h4>
+                                </div>
+                                <ul class="list-inline overflow-h">
+                                    <li class="thumb-product-price">@product.ProductPrice.Price</li>
+                                </ul>
+                            </div>
+                        }
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}

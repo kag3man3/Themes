@@ -1,0 +1,93 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ProductsByTagModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    
+    //title
+    Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
+    //page class
+    Html.AppendPageCssClassParts("html-product-tag-page");
+}
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Extensions;
+@using DevPartner.Nop.Plugin.Core.Helpers;
+
+<div class="row margin-bottom-5">
+    <div class="col-sm-4 result-category">
+        <h2>@Model.TagName</h2>
+        @*<small class="shop-bg-red badge-results">@Model.Products.Count</small>*@
+    </div>
+    <div class="col-sm-8">
+        <ul class="list-inline clear-both">
+            @if (Model.Products.Count > 0)
+            {
+                @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+            }
+        </ul>
+    </div>
+</div>
+
+<p>@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</p>
+@Html.Widget("productsbytag_top", Model.Id)
+@Html.Widget("productsbytag_before_product_list", Model.Id)
+
+@if (Model.Products.Count > 0)
+{
+    <div class="filter-results">
+        @if (Model.PagingFilteringContext.ViewMode == "list")
+        {
+            foreach (var product in Model.Products)
+            {
+                @Html.Partial("_ProductBox_List", product)
+            }
+        }
+        else
+        {
+            for (var i = 0; i < Model.Products.Count; i += 3)
+            {
+                var products = new List<ProductOverviewModel>();
+                products.Add(Model.Products[i]);
+                if (i + 1 < Model.Products.Count)
+                {
+                    products.Add(Model.Products[i + 1]);
+                }
+                if (i + 2 < Model.Products.Count)
+                {
+                    products.Add(Model.Products[i + 2]);
+                }
+
+                <div class="row illustration-v2 margin-bottom-30">
+                    @foreach (var product in products)
+                    {
+                        <div class="col-md-4">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+
+
+@(Html.Partial("_DevPartnerPagination", new DevPartner.Nop.Plugin.Core.Models.PaginationInfo
+{
+    PageUrl = Url.SetParameter("pagenumber", "!0"),
+    CurrentPage = Model.PagingFilteringContext.PageIndex + 1,
+    PageSize = Model.PagingFilteringContext.PageSize,
+    TotalItemCount = Model.PagingFilteringContext.TotalPages,
+}))
+
+
+@Html.Widget("productsbytag_bottom", Model.Id)
+

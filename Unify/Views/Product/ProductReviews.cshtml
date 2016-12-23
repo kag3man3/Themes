@@ -1,0 +1,105 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ProductReviewsModel
+@using Nop.Web.Models.Catalog;
+
+@foreach (var review in Model.Items)
+{
+    <div class="product-comment margin-bottom-40">
+        <div class="product-comment-in">
+            @*<img class="product-comment-img rounded-x" src="assets/img/team/01.jpg" alt="">*@
+            <div class="product-comment-dtl">
+                <h4>
+                    @if (review.AllowViewingProfiles)
+                {
+                        <a href="@Url.RouteUrl("CustomerProfile", new {id = review.CustomerId})">@(review.CustomerName)</a>
+                    }
+                    else
+                    {
+                        @review.CustomerName
+                    }
+                    <small>@review.WrittenOnStr</small>
+                </h4>
+                <h3>@review.Title</h3>
+                <p>@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))</p>
+                <ul class="list-inline product-ratings">
+                    <li class="pull-right">
+                        <ul class="list-inline">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <li><i class="@(i < review.Rating ? "rating-selected" : "rating") fa fa-star"></i></li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+                @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.AddProductReview.SuccessfullyAdded)
+{
+    <h3 class="heading-md margin-bottom-30">@Model.AddProductReview.Result</h3>
+}
+else
+{
+    <h3 class="heading-md margin-bottom-30">@T("Reviews.Write")</h3>
+    <div id="review-form">
+            @using (Html.BeginForm())
+            {
+                <div class="sky-form sky-changes-4">
+                    <fieldset>
+                        <div class="message-error">@Html.ValidationSummary(true)</div>
+                        <div class="margin-bottom-30">
+                            @Html.LabelFor(model => model.AddProductReview.Title, new { @class = "label-v2" }, ":")
+                            <label class="input">
+                                @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { }) : (object)(new { @class = "review-title, form-control", disabled = "disabled" }))
+                            </label>
+                            @Html.ValidationMessageFor(model => model.AddProductReview.Title)
+                        </div>
+                        <div class="margin-bottom-30">
+                            @Html.LabelFor(model => model.AddProductReview.ReviewText, new { @class = "label-v2" }, ":")
+                            <label class="textarea">
+                                @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { rows = "7" }) : (object)(new { disabled = "disabled", rows = "7" }))
+                            </label>
+                            @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
+                        </div>
+                    </fieldset>
+                    <footer class="review-submit">
+                        @Html.LabelFor(model => model.AddProductReview.Rating, new { @class = "label-v2" }, ":")
+                        <div class="stars-ratings">
+                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5", new { id = "addproductrating_5" })
+                            <label for="addproductrating_5"><i class="fa fa-star"></i></label>
+                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4", new { id = "addproductrating_4" })
+                            <label for="addproductrating_4"><i class="fa fa-star"></i></label>
+                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3", new { id = "addproductrating_3" })
+                            <label for="addproductrating_3"><i class="fa fa-star"></i></label>
+                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2", new { id = "addproductrating_2" })
+                            <label for="addproductrating_2"><i class="fa fa-star"></i></label>
+                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1", new { id = "addproductrating_1" })
+                            <label for="addproductrating_1"><i class="fa fa-star"></i></label>
+                        </div>
+                        @if (Model.AddProductReview.DisplayCaptcha)
+                    {
+                            <div class="captcha-box form-group row">
+                                <div class="col-md-6">
+                                    @Html.Raw(Html.GenerateCaptcha())
+                                </div>
+                            </div>
+                        }
+                        <input type="submit" name="add-review" class="btn-u btn-u-sea-shop btn-u-sm pull-right" value="@T("Reviews.SubmitButton")" />
+                    </footer>
+                </div>
+            }
+    </div>
+}

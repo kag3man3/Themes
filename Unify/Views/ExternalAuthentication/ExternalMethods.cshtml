@@ -1,0 +1,33 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model List<ExternalAuthenticationMethodModel>
+@using Nop.Web.Models.Customer;
+@if(Model.Count>0)
+{
+ foreach (var eam in Model)
+ {
+     <div class="row">
+         <div class="col-md-12">
+             <div class="external-authentication">
+                 <div class="offer offer-default">
+                   
+                    
+                     @Html.Action(eam.ActionName, eam.ControllerName, eam.RouteValues)
+                     
+                 </div>
+             </div>
+         </div>
+            
+     </div>
+ }
+
+}

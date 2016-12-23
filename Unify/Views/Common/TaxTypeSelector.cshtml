@@ -1,0 +1,62 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model TaxTypeSelectorModel
+@using Nop.Core;
+@using Nop.Core.Domain.Tax;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Common;
+@{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+    var taxTypes = new List<SelectListItem>();
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Inclusive").Text,
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax) }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
+    });
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Exclusive").Text,
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax) }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
+    });
+
+    var selectedTaxType = taxTypes.FirstOrDefault(t => t.Selected);
+    var selectedTaxTypeName = selectedTaxType != null ? selectedTaxType.Text : "";
+}
+
+<a>
+    @selectedTaxTypeName
+</a>
+<ul class="currency">
+    @foreach (var taxType in taxTypes)
+    {
+        if (taxType.Selected)
+        {
+            <li class="active">
+                <a href="@taxType.Value">
+                    @taxType.Text
+                    <i class="fa fa-check"></i>
+                </a>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a href="@taxType.Value">
+                    @taxType.Text
+                </a>
+            </li>
+        }
+    }
+</ul>

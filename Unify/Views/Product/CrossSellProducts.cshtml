@@ -1,0 +1,35 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model IList<ProductOverviewModel>
+@using Nop.Web.Models.Catalog;
+
+@if (Model.Count > 0)
+{
+    <div class="heading heading-v1 margin-bottom-20">
+        <h2 class="title text-center">@T("ShoppingCart.CrossSells")</h2>
+        @*<p></p>*@
+    </div>
+    <div class="illustration-v2 margin-bottom-60">
+        <div class="customNavigation margin-bottom-25">
+            <a class="owl-btn prev rounded-x"><i class="fa fa-angle-left"></i></a>
+            <a class="owl-btn next rounded-x"><i class="fa fa-angle-right"></i></a>
+        </div>
+        <ul class="list-inline owl-slider">
+            @foreach (var item in Model)
+            {
+                <li class="item">
+                    @Html.Partial("_ProductBox", item)
+                </li>
+            }
+        </ul>
+    </div>
+}

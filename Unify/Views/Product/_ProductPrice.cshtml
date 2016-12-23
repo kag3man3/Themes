@@ -1,0 +1,97 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model ProductDetailsModel.ProductPriceModel
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Catalog;
+
+<ul class="list-inline shop-product-prices margin-bottom-30">
+    @if (Model.CallForPrice)
+    {
+        <li class="call-for-price">
+            @T("Products.CallForPrice")
+        </li>
+    }
+    else
+    {
+        if (Model.IsRental)
+        {
+            <li class="rental-price">
+                @*<label>@T("Products.Price.RentalPrice"):</label>*@
+                <span>@Model.RentalPrice</span>
+            </li>
+        }
+        if (!String.IsNullOrWhiteSpace(Model.OldPrice))
+        {
+            <li>
+                @*<label>@T("Products.Price.OldPrice"):</label>*@
+                <span class="line-through">@Model.OldPrice</span>
+            </li>
+        }
+        <li>
+        @{
+            var hasOldOrDiscountedPrice =
+                !String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount);
+        }
+
+        @if (hasOldOrDiscountedPrice)
+        {
+            @*<label>@T("Products.Price"):</label>*@
+        }
+        @*<span class="@(hasOldOrDiscountedPrice ? "shop-red" : "")" @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            {
+                <text> itemprop="price" class="price-value-@(Model.ProductId)" </text>
+            }>*@
+            @*render price*@<span class="@(hasOldOrDiscountedPrice ? "shop-red" : "")" @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)" </text>      }>
+                @Html.Raw(Model.Price)
+            </span>
+        </li>
+
+        if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {
+            <li>
+                @*<label>@T("Products.Price.WithDiscount"):</label>*@
+                <div class="product-price discounted-price">
+                    <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)">
+                        @Html.Raw(Model.PriceWithDiscount)
+                    </span>
+                </div>
+            </li>
+        }
+
+        if (!String.IsNullOrEmpty(Model.BasePricePAngV))
+        {
+            <li>
+                @Model.BasePricePAngV
+            </li>
+        }
+
+        if (Model.DisplayTaxShippingInfo)
+        {
+            var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+            <li>
+                <p>
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                </p>
+            </li>
+        }
+
+        if (!String.IsNullOrEmpty(Model.CurrencyCode))
+        {
+            <li>
+                <meta itemprop="priceCurrency" content="@Model.CurrencyCode" />
+            </li>
+            
+        }
+    }
+</ul>

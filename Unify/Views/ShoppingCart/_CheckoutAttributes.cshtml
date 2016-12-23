@@ -1,0 +1,181 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model IList<Nop.Web.Models.ShoppingCart.ShoppingCartModel.CheckoutAttributeModel>
+@using Nop.Core.Domain.Catalog;
+@using System.Text;
+@if (Model.Count > 0)
+{
+    var attributeChangeScriptsBuilder = new StringBuilder();
+    <div class="row">
+        <div class="col-md-12">
+            <dl class="offer offer-default">
+                @foreach (var attribute in Model)
+                {
+                    string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
+                    string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                    <dt id="@string.Format("checkout_attribute_label_{0}", attribute.Id)">
+                        <label class="text-prompt">
+                            @textPrompt
+                        </label>
+                        @if (attribute.IsRequired)
+                        {
+                            <span class="required">*</span>
+                        }
+                    </dt>
+                    <dd id="@string.Format("checkout_attribute_input_{0}", attribute.Id)">
+                        @switch (attribute.AttributeControlType)
+                        {
+                            case AttributeControlType.DropdownList:
+                            {
+                                <select name="@(controlId)" id="@(controlId)" class="gray-dropdown">
+                                    @if (!attribute.IsRequired)
+                                    {
+                                        <option value="0">---</option>
+                                    }
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                            @attributeValue.Name
+                                            @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)
+                                        </option>
+                                    }
+                                </select>
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{checkoutAttributeChange();}});\n", controlId);
+                            }
+                                break;
+                            case AttributeControlType.RadioList:
+                            {
+                                <div>
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <div>
+                                            <span><input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" /></span>
+                                            <span><label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</label></span>
+                                        </div>
+                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                    }
+                                </div>
+                            }
+                                break;
+                            case AttributeControlType.Checkboxes:
+                            case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                <div>
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                            attributeValue.Name :
+                                            T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
+                                        <div>
+                                            <span>
+                                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                                </span>
+                                            <span>
+                                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
+                                                </span>
+                                        </div>
+                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                    }
+                                </div>
+                            }
+                                break;
+                            case AttributeControlType.TextBox:
+                            {
+                                <input name="@(controlId)" type="text" class="gray-input square-box" id="@(controlId)" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null)/>
+                            }
+                                break;
+                            case AttributeControlType.MultilineTextbox:
+                            {
+                                <textarea class="gray-textarea square-box" id="@(controlId)" name="@(controlId)">@(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? attribute.DefaultValue : null)</textarea>
+                            }
+                                break;
+                            case AttributeControlType.Datepicker:
+                            {
+                                @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear)
+                            }
+                                break;
+                            case AttributeControlType.FileUpload:
+                            {
+                                <input class="square-box" type="file" id="@(controlId)" name="@(controlId)"/>
+                            }
+                                break;
+                            case AttributeControlType.ColorSquares:
+                            {
+                                <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                            <label for="@(controlId)_@(attributeValue.Id)">
+                                                <span class="color-container" title="@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)">
+                                                        <span class="color" style="background-color: @(attributeValue.ColorSquaresRgb);">&nbsp;</span>
+                                                    </span>
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"/>
+                                                @*uncomment below to display attribute value name*@
+                                                @*<span class="name">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</span>*@
+                                            </label>
+                                        </li>
+                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                    }
+                                </ul>
+                                <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        $('.checkout-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                            $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+                                            $(this).closest('li').addClass('selected-value');
+                                        });
+                                    });
+                                </script>
+                            }
+                                break;
+                            case AttributeControlType.ImageSquares:
+                            {
+                                //not support attribute type
+                            }
+                                break;
+                        }
+                    </dd>
+                }
+            </dl>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            checkoutAttributeChange();
+            @Html.Raw(attributeChangeScriptsBuilder.ToString())
+        });
+
+        function checkoutAttributeChange() {
+            $.ajax({
+                cache: false,
+                url: '@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart"))',
+                data: $('#shopping-cart-form').serialize(),
+                type: 'post',
+                success: function(data) {
+                    if (data.enabledattributeids) {
+                        for (var i = 0; i < data.enabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.enabledattributeids[i]).show();
+                            $('#checkout_attribute_input_' + data.enabledattributeids[i]).show();
+                        }
+                    }
+                    if (data.disabledattributeids) {
+                        for (var i = 0; i < data.disabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.disabledattributeids[i]).hide();
+                            $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,43 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ProductDetailsModel
+@using Nop.Core.Domain.Media
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.Themes
+@using Nop.Web.Models.Catalog;
+@{
+    var currentThemeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    var blankGifPath = "/Themes/" + currentThemeName + "/img/blank.gif";
+}
+
+<div class="ms-showcase2-template">
+    <div class="master-slider ms-skin-default" id="masterslider">
+        @foreach (var picture in Model.PictureModels)
+            {
+            <div class="ms-slide">
+                <img class="ms-brd" src="@blankGifPath" data-src="@picture.FullSizeImageUrl" alt="@picture.AlternateText">
+                <img class="ms-thumb" src="@picture.FullSizeImageUrl" @*src="@picture.ImageUrl"*@ alt="thumb">
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+﻿@using DevPartner.Nop.Plugin.Misc.Search.Helpers
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using DevPartner.Nop.Plugin.Misc.Search.Models;
+
+@model KeyValuePair<string, ICollection<KeyValuePair<string, int>>>
+
+<div class="block">
+    <div class="title">
+        <strong>@T("DevPartner.Search." + Html.SolrFieldPropName<SearchProduct>(Model.Key))</strong>
+    </div>
+    <div class="listbox">
+        <ul class="list">
+
+            @foreach (var fv in Model.Value)
+            {
+                <li>
+                    <a href="@Url.SetFacet(Model.Key, fv.Key)">@HttpUtility.UrlDecode(fv.Key)</a> <span>(@fv.Value)</span>
+                </li>
+            }
+        </ul>
+        @*@if (Model.TotalVendors > Model.Vendors.Count)
+            {
+                <div class="view-all">
+                    <a href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</a>
+                </div>
+            }*@
+    </div>
+</div>

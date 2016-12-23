@@ -1,0 +1,42 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model CategoryModel
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+}
+<ul class="breadcrumb-v4-in">
+    <li>
+        <a href="/" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+    </li>
+    @foreach (var cat in Model.CategoryBreadcrumb)
+    {
+        var isLastCategory = cat.Id == Model.Id;
+        if (isLastCategory)
+        {
+            <li class="active">@cat.Name</li>
+        }
+        else
+        {
+            <li>
+                <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+            </li>
+        }
+    }
+</ul>
+
+
+
+
+

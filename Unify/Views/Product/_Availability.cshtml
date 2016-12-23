@@ -1,0 +1,26 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+@if (!String.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
+{
+    <div class="availability">
+        @if (!String.IsNullOrWhiteSpace(Model.StockAvailability))
+        {
+            <div class="stock">
+                <span>@T("Products.Availability"):</span>
+                <span id="stock-availability-value-@Model.Id">@Model.StockAvailability</span>
+            </div>
+        }
+        @Html.Partial("_BackInStockSubscription", Model)
+    </div>
+}

@@ -1,0 +1,45 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Themes/Unify/assets/css/pages/page_404_error-rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Themes/Unify/assets/css/pages/page_404_error.css");
+    }
+
+    //title
+    Html.AddTitleParts(T("PageTitle.PageNotFound").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-not-found-page");
+}
+
+<div class="container content">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="error-v1">
+                <span class="error-v1-title">404</span>
+                <span>@T("PageTitle.PageNotFound")</span>
+                <p>@Html.Action("TopicBlock", "Topic", new { systemName = "PageNotFound" })</p>
+            </div>
+        </div>
+    </div>
+</div>
+

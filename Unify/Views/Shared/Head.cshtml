@@ -1,0 +1,86 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI
+@{
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    <!--CSS Page-->
+    Html.AppendCssFileParts("~/Themes/Unify/E-Commerce/assets/css/pages/log-reg-v3.css");
+    <!-- Web Fonts -->
+    <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,800&amp;subset=cyrillic,latin'>
+
+
+    <!-- CSS Customization -->
+    Html.AppendCssFileParts("~/Themes/Unify/assets/css/devpartner.style.css");
+
+    <!-- CSS Implementing Plugins -->
+    //Html.AppendCssFileParts("~/Themes/Unify/E-Commerce/assets/plugins/jquery-steps/css/custom-jquery.steps.css");
+    Html.AppendCssFileParts("~/Themes/Unify/assets/plugins/animate.css");
+    Html.AppendCssFileParts("~/Themes/Unify/assets/plugins/line-icons/line-icons.css");
+    Html.AppendCssFileParts("~/Themes/Unify/assets/plugins/font-awesome/css/font-awesome.min.css");
+    Html.AppendCssFileParts("~/Themes/Unify/assets/css/blocks.css");
+    Html.AppendCssFileParts("~/Themes/Unify/E-Commerce/assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css");
+
+
+    <!--CSS del Siju-->
+
+        <!-- Favicon -->
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <!-- Web Fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=cyrillic,latin">
+
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/css/app.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/css/blocks.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/css/one.style.css">
+
+    <!-- CSS Footer -->
+    <link rel="stylesheet" href="~/Themes/Unify/assets/css/footers/footer-v7.css">
+
+    <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/animate.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/line-icons/line-icons.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/pace/pace-flash.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/owl-carousel2/assets/owl.carousel.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css">
+    <link rel="stylesheet" href="~/Themes/Unify/assets/plugins/shhos/shhos.css">
+
+    <!-- CSS Theme -->
+    <link rel="stylesheet" href="~/Themes/Unify/assets/css/app.style.css">
+
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="~/Themes/Unify/assets/css/custom.css">
+
+
+
+
+    <!-- CSS Global Compulsory -->
+    Html.AppendCssFileParts("~/Themes/Unify/E-Commerce/assets/css/shop.style.css");
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Themes/Unify/assets/plugins/bootstrap/css/bootstrap-rtl.min.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Themes/Unify/assets/plugins/bootstrap/css/bootstrap.min.css");
+    }
+
+
+    @*<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>*@
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+}

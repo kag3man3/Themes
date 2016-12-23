@@ -1,0 +1,44 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model RegisterResultModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Register").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-registration-result-page");
+
+
+}
+@using (Html.BeginForm(new {ReturnUrl = Request.QueryString["ReturnUrl"]}))
+{
+    @Html.AntiForgeryToken()
+    <div class="features_items my-account-page"><!--features_items-->
+        <h2 class="title text-center">@T("Account.Register")</h2>
+        <div class="custom-page-box-div">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="result">
+                        @Model.Result
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" name="register-continue" class="button-1 register-continue-button btn btn-primary" value="@T("Account.Register.Result.Continue")" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}

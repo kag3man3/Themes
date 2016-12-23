@@ -1,0 +1,30 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+ *
+ * This file is part of DevPartner Unify Theme.
+ *
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model EditForumPostModel
+@using Nop.Web.Models.Boards;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne_SkyForms.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
+}
+@section Breadcrumb
+{
+    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
+}
+
+<div class="bg-color-light">
+    <div class="container content-sm">
+        @Html.Widget("boards_postedit_before", Model.Id)
+        @Html.Partial("_CreateUpdatePost", Model)
+        @Html.Widget("boards_postedit_after", Model.Id)
+    </div>
+</div>

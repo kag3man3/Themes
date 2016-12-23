@@ -1,0 +1,162 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model TopMenuModel
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Web.Framework.Themes
+@using System.Text.RegularExpressions
+@using Nop.Services.Localization
+@using Nop.Web.Models.Catalog;
+@{
+    var isRtl = this.ShouldUseRtlTheme();
+}
+@helper Bracket_Remover(string input)
+{
+int index1 = input.IndexOf('(');
+string result = input.Remove(index1, 1);
+
+index1 = result.IndexOf(')');
+result = result.Remove(index1, 1);
+
+    @Html.Raw(@result)
+}
+
+@helper RenderSubCategoryLine(CategorySimpleModel category, int level)
+{
+if (category.SubCategories.Count > 0)
+{
+        <li class="dropdown">
+            <a href="javascript:void(0);">
+                @category.Name
+            </a>
+            <ul class="dropdown-submenu">
+                @foreach (var subCategory in category.SubCategories)
+                {
+                    @RenderSubCategoryLine(subCategory, level + 1)
+                }
+            </ul>
+        </li>
+}
+else
+{
+        <li>
+            <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">
+                @category.Name
+            </a>
+        </li>
+}
+}
+
+@helper RenderCategoryLine(CategorySimpleModel category, int level)
+{
+if (category.SubCategories.Count > 0)
+{
+        <li class="dropdown">
+            <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">
+                @category.Name
+            </a>
+            <a href="javascript:void(0);" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown">
+            </a>
+            @*<a href="javascript:void(0);" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown">
+                    @category.Name
+                </a>*@
+            <ul class="dropdown-menu">
+                @foreach (var subCategory in category.SubCategories)
+                {
+                    @RenderSubCategoryLine(subCategory, level + 1)
+                }
+            </ul>
+        </li>
+}
+else
+{
+        <li>
+            <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">
+                @category.Name
+            </a>
+        </li>
+}
+}
+
+<div class="navbar navbar-default mega-menu" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.Action("Logo", "Common")
+        </div>
+
+        <!-- Shopping Cart -->
+        <div class="shop-badge badge-icons pull-right">
+            <ul>
+                @Html.Action("HeaderLinks", "Common")
+            </ul>
+            @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-responsive-collapse">
+            <!-- Nav Menu -->
+            <ul class="nav navbar-nav">
+                @Html.Widget("header_menu_before")
+                <li>
+                    <a href="@Url.RouteUrl("HomePage")">
+                        @*<a href="http://dev-partner.biz/">*@
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                @{
+                    var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
+                }
+                @foreach (var category in rootCategories)
+                {
+                    @RenderCategoryLine(category, 0)
+                }
+
+                @foreach (var topic in Model.Topics)
+                {
+                    <li><a href="@Url.RouteUrl("Topic", new {SeName = topic.SeName})">@topic.Name</a></li>
+
+                }
+                @if (Model.Categories.Count == 0 && Model.Topics.Count == 0)
+                {
+                    //no categories to display?
+                    //in this case let's diplay some default menu items
+                    <li><a href="http://dev-partner.biz/">@T("HomePage")</a></li>
+                    if (Model.NewProductsEnabled)
+                    {
+                        <li>
+                            <a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
+                        </li>
+                    }
+                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+                    if (Model.BlogEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                    }
+                    if (Model.ForumEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                    }
+                    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                }
+                @Html.Widget("header_menu_after")
+            </ul>
+        </div>
+    </div>
+</div>

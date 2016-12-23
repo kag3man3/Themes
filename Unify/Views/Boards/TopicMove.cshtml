@@ -1,0 +1,56 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model TopicMoveModel
+@using Nop.Web.Models.Boards;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne_SkyForms.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+
+    //title
+    Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-move-topic-page");
+}
+@section Breadcrumb
+{
+    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
+}
+
+
+<div class="bg-color-light">
+    <div class="container content-sm">
+        <div id="comment-form">
+            <div class="sky-form sky-changes-4">
+                <header>
+                    @T("Forum.MoveTopic")
+                </header>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+                    <fieldset>
+                        <section>
+
+                            <label class="label">@T("Forum.SelectTheForumToMoveTopic"):</label>
+                                @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
+                        </section>
+                    </fieldset>
+                    <footer>
+                        <input type="submit" value="@T("Forum.Submit")" class="btn-u" />
+                        <input type="button" class="btn-u btn-u-default" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.Id, slug = Model.TopicSeName })')" />
+                    </footer>
+                }
+            </div>
+        </div>
+    </div>
+</div>

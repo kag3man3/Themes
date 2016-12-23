@@ -1,0 +1,139 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@model ForumPostModel
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Boards;
+@{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+    var thisPageUrl = webHelper.GetThisPageUrl(true);
+}
+@Html.Raw(String.Format("<a name=\"{0}\"></a>", Model.Id))
+
+<div class="media media-v2" id="@Html.Encode(String.Format("post{0}", Model.Id))">
+    <div class="row" style="transform: none;">
+        <div class="col-md-2">
+            @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
+            {
+                if (Model.AllowViewingProfiles)
+                {
+                    <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.CustomerId })">
+                        <img src="@(Model.CustomerAvatarUrl)" class="media-object rounded-x" alt="Avatar" />
+                    </a>
+                }
+                else
+                {
+                    <a href="#">
+                        <img src="@(Model.CustomerAvatarUrl)" class="media-object rounded-x" alt="Avatar" />
+                    </a>
+                }
+            }
+            <ul class="user-stats">
+                @if (Model.IsCustomerForumModerator)
+            {
+                    <li class="status">
+                        @*@T("Forum.Status"):*@
+                        <span>@T("Forum.Moderator")</span>
+                    </li>
+                }
+                @if (Model.ShowCustomersPostCount)
+            {
+                    <li class="total-posts">
+                        @T("Forum.TotalPosts"):
+                        <span>@Model.ForumPostCount</span>
+                    </li>
+                }
+                @if (Model.ShowCustomersJoinDate)
+            {
+                    <li class="joined">
+                        @T("Forum.Joined"):
+                        <span>@Model.CustomerJoinDate.ToString("d")</span>
+                    </li>
+                }
+                @if (Model.ShowCustomersLocation && !String.IsNullOrEmpty(Model.CustomerLocation))
+            {
+                    <li class="location">
+                        @T("Forum.Location"):
+                        <span>@Model.CustomerLocation</span>
+                    </li>
+                }
+            </ul>
+
+        </div>
+        <div class="col-md-10">
+            <ul class="list-inline pull-right post-actions pull-right">
+                @if (Model.IsCurrentCustomerAllowedToEditPost)
+                {
+                    <li>
+
+                        <a href="#" onclick="location.href = '@Url.RouteUrl("PostEdit", new { id = Model.Id })'">
+                            <i class="expand-list rounded-x fa fa-pencil-square-o"></i>
+                        </a>
+                    </li>
+                }
+                @if (Model.IsCurrentCustomerAllowedToDeletePost)
+                {
+                    <li>
+
+                        <a href="#" class="delete-post-button" onclick="return deletepost(@(Model.Id))"><i class="expand-list rounded-x fa fa-trash-o"></i></a>
+                    </li>
+                    //return confirm('{0}'); ", T("Common.AreYouSure").Text)
+                }
+                <li class="quote-post">
+                    <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="post-link-button" href="@(thisPageUrl)#@(Model.Id)">#@(Model.Id)</a>
+                </li>
+                <li>
+                    <a href="#" onclick="location.href = '@Url.RouteUrl("PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id })'">
+                        <i class="expand-list rounded-x fa fa-quote-left"></i>
+                    </a>
+                </li>
+
+            </ul>
+            <h4 class="media-heading">
+                <strong>
+                    @if (Model.AllowViewingProfiles)
+                    {
+                        @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
+                    }
+                    else
+                    {
+                        <span class="username">@Model.CustomerName</span>
+                    }
+                </strong>
+                @if (Model.AllowPrivateMessages)
+                {
+                    <span class="send-pm">
+                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "pm-button" })
+                    </span>
+                }
+                <small>
+                    <label>@T("Forum.Posted"):</label>
+                    <span class="stat-value">@Model.PostCreatedOnStr</span>
+                </small>
+
+            </h4>
+            <div class="post-body">
+                @Html.Raw(Model.FormattedText)
+                @Html.Hidden("Id", Model.Id)
+            </div>
+            @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
+            {
+                <div class="signature">
+                    @Html.Raw(Model.FormattedSignature)
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+</div>

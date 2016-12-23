@@ -1,0 +1,125 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model SitemapModel
+@using Nop.Web.Models.Common;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Sitemap").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-sitemap-page");
+}
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="title text-center">@T("Sitemap")</h2>
+        </div>
+    </div>
+    <div class="description">
+        @T("Sitemap.Description")
+    </div>
+    @Html.Widget("sitemap_before")
+    <div class="custom-page-box-div">
+        <h3>@T("Sitemap.General")</h3>
+        <div class="row">
+
+            <div class="col-md-3"><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></div>
+            <div class="col-md-3"><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></div>
+            @if (Model.NewsEnabled)
+            {
+                <div class="col-md-3"><a href="@Url.RouteUrl("NewsArchive")">@T("News")</a></div>
+            }
+            @if (Model.BlogEnabled)
+            {
+                <div class="col-md-3"><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></div>
+            }
+            @if (Model.ForumEnabled)
+            {
+                <div class="col-md-3"><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></div>
+            }
+            <div class="col-md-3"><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></div>
+            <div class="col-md-3"><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></div>
+            @if (Model.Topics.Count > 0)
+            {
+                foreach (var item in Model.Topics)
+                {
+                    <div class="col-md-3"><a href="@Url.RouteUrl("Topic", new {Sename = Html.GetTopicSeName(item.SystemName)})">@item.Title</a></div>
+                }
+            }
+            @if (Model.Topics.Count > 0)
+            {
+                foreach (var item in Model.Topics)
+                 {
+                     <div class="col-md-3"><a href="@Url.RouteUrl("Topic", new {SystemName = item.SystemName.ToLowerInvariant()})">@item.Title</a>
+                     </div>
+                 }
+            }
+            <div class="clearfix space20"></div>
+            <div class="clearfix space20"></div>
+            <div class="clearfix space20"></div>
+        </div>
+    </div>
+    @if (Model.Categories.Count > 0)
+    {
+        <div class="custom-page-box-div">
+            <h3>@T("Sitemap.Categories")</h3>
+            <div class="row">
+                @foreach (var category in Model.Categories)
+                {
+                    <div class="col-md-3"><a href="@Url.RouteUrl("Category", new {SeName = category.SeName})">@category.Name</a></div>
+                }
+                <div class="clearfix space20"></div>
+                <div class="clearfix space20"></div>
+                <div class="clearfix space20"></div>
+            </div>
+        </div>
+    }
+    @if (Model.Manufacturers.Count > 0)
+    {
+        <div class="custom-page-box-div">
+            <h3>@T("Sitemap.Manufacturers")</h3>
+            <div class="row">
+                @foreach (var manufacturer in Model.Manufacturers)
+                {
+                    <div class="col-md-3"><a href="@Url.RouteUrl("Manufacturer", new {SeName = manufacturer.SeName})">@manufacturer.Name</a></div>
+                }
+                <div class="clearfix space20"></div>
+                <div class="clearfix space20"></div>
+                <div class="clearfix space20"></div>
+            </div>
+        </div>
+
+
+    }
+    @if (Model.Products.Count > 0)
+    {
+        <div class="custom-page-box-div">
+            <h3>@T("Sitemap.Products")</h3>
+            <div class="row">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-md-3"><a href="@Url.RouteUrl("Product", new {SeName = product.SeName})">@product.Name</a></div>
+                }
+                <div class="clearfix space20"></div>
+                <div class="clearfix space20"></div>
+                <div class="clearfix space20"></div>
+            </div>
+        </div>
+
+    }
+    @Html.Widget("sitemap_after")
+</div>
+
+
+

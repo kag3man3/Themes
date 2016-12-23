@@ -1,0 +1,133 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved.
+    *
+    * This file is part of DevPartner Unify Theme.
+    *
+    * DevPartner Unify Theme can not be copied and/or distributed without the express
+    * permission of Dev Partner LLC.
+    *
+    * Written by Kanstantsin Ivinki, June 2016
+    * Email: info@dev-partner.biz
+    * Website: http://dev-partner.biz
+*@
+@model IList<Nop.Web.Models.Customer.CustomerAttributeModel>
+@using Nop.Core.Domain.Catalog;
+@foreach (var attribute in Model)
+{
+    string controlId = string.Format("customer_attribute_{0}", attribute.Id);
+    string textPrompt = attribute.Name;
+    <section>
+        <div class="row margin-bottom-10">
+            @switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.DropdownList:
+                    {
+                        <div class="col-sm-4">
+                            <label class="control-label" for="@(controlId)">@textPrompt</label>
+                            @if (attribute.IsRequired)
+                            {
+                                @Html.RequiredHint()
+                            }
+                        </div>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="@(controlId)" id="@(controlId)">
+                                @if (!attribute.IsRequired)
+                                {
+                                    <option value="0">---</option>
+                                }
+                                @foreach (var caValue in attribute.Values)
+                                {
+                                    <option selected="@caValue.IsPreSelected" value="@caValue.Id">@caValue.Name</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                    break;
+                case AttributeControlType.RadioList:
+                    {
+                        <div class="col-sm-4">
+                            <label class="control-label">@textPrompt</label>
+                            @if (attribute.IsRequired)
+                            {
+                                @Html.RequiredHint()
+                            }
+                        </div>
+                        <div class="col-sm-8">
+                            <ul class="list-unstyled">
+                                @foreach (var caValue in attribute.Values)
+                                {
+                                    <li>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="@(controlId)" id="@(controlId)_@(caValue.Id)" value="@caValue.Id" checked="@caValue.IsPreSelected" />
+                                                @caValue.Name
+                                            </label>
+                                        </div>
+                                        @*<input id="@(controlId)_@(caValue.Id)" class="form-control" type="radio" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" />
+                                            <label class="forcheckbox  " for="@(controlId)_@(caValue.Id)">@caValue.Name</label>*@
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    break;
+                case AttributeControlType.Checkboxes:
+                case AttributeControlType.ReadonlyCheckboxes:
+                    {
+                        <div class="col-sm-4">
+                            <label class="control-label">@textPrompt</label>
+                            @if (attribute.IsRequired)
+                            {
+                                @Html.RequiredHint()
+                            }
+                        </div>
+                        <div class="col-sm-8">
+                            <ul class="list-unstyled">
+                                @foreach (var caValue in attribute.Values)
+                            {
+                                    <li>
+                                        <label>
+                                            <input id="@(controlId)_@(caValue.Id)" type="checkbox" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? "checked" : "") @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
+                                            @caValue.Name
+                                        </label>
+                                        @*<label>
+                                            <input id="@(controlId)_@(caValue.Id)" type="checkbox" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
+                                            @caValue.Name
+                                        </label>*@
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    break;
+                case AttributeControlType.TextBox:
+                    {
+                        <div class="col-lg-12">
+                            <input name="@(controlId)" type="text" class="form-control" placeholder="@textPrompt" id="@(controlId)" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null) />
+                        </div>
+                    }
+                    break;
+                case AttributeControlType.MultilineTextbox:
+                    {
+                        <div class="col-lg-12">
+                            <textarea id="@(controlId)" placeholder="@textPrompt" name="@(controlId)" class="form-control" cols="20" rows="4">@(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? attribute.DefaultValue : null)</textarea>
+                        </div>
+
+                        @*<textarea id="@(controlId)" placeholder="@textPrompt" name="@(controlId)">@(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? attribute.DefaultValue : null)</textarea>*@
+                    }
+                    break;
+                case AttributeControlType.Datepicker:
+                case AttributeControlType.FileUpload:
+                case AttributeControlType.ColorSquares:
+                case AttributeControlType.ImageSquares:
+                    {
+                        //not support attribute type
+                    }
+                    break;
+            }
+            @*@if (attribute.IsRequired)
+            {
+                @Html.RequiredHint()
+            }*@
+        </div>
+    </section>
+}

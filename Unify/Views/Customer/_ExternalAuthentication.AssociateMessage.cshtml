@@ -1,0 +1,26 @@
+﻿@* Copyright (C) 2016 Dev Partner LLC. - All Rights Reserved. 
+ *
+ * This file is part of DevPartner Unify Theme.
+ * 
+ * DevPartner Unify Theme can not be copied and/or distributed without the express
+ * permission of Dev Partner LLC.
+ *
+ * Written by Kanstantsin Ivinki, June 2016
+ * Email: info@dev-partner.biz
+ * Website: http://dev-partner.biz
+ *@
+@{
+    var openAuthParameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(false);
+}
+@using Nop.Core
+@using Nop.Services.Authentication.External;
+@if (openAuthParameters != null)
+{
+    <div class="external-auth-association alert alert-info square-box">
+        @T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo")
+        <span class="identifier">
+            @CommonHelper.EnsureMaximumLength(openAuthParameters.ExternalIdentifier, 40, "...")
+        </span>
+        <a href="@Url.Action("RemoveParameterAssociation", "ExternalAuthentication", new { ReturnUrl = Request.Url.ToString() })" class="remove">(remove)</a>
+    </div>
+}
