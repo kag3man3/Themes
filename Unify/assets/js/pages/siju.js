@@ -22,8 +22,8 @@
 function comprarOneEmail()
 {
     console.log('asd')
-    AjaxCart.addproducttocart_catalog('/siju/addproducttocart/catalog/4/1/1');
+    AjaxCart.addproducttocart_catalog('/addproducttocart/catalog/4/1/1');
 }
 function comprarTwoEmail() {
-    AjaxCart.addproducttocart_catalog('/siju/addproducttocart/catalog/3/1/1');
+    AjaxCart.addproducttocart_catalog('/addproducttocart/catalog/3/1/1');
 }
