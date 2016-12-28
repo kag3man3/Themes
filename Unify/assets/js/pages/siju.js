@@ -1,5 +1,7 @@
 ﻿function showHideActivation(option)
 {
+    $('.g-popup-wrapper').show();
+    return;
     if (option == "oneEmail") {
         $('#oneEmailDiv').show();
         $('#twoEmailDiv').hide();

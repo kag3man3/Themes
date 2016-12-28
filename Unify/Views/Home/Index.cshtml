@@ -67,9 +67,6 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <div class="menu-container">
                     <ul class="nav navbar-nav">
-                        <li class="page-scroll home">
-                            <a href="#body">Home</a>
-                        </li>
                         <li class="page-scroll">
                             <a href="#about">Acerca</a>
                         </li>
@@ -95,7 +92,7 @@
                             <a href="#contact">Contactenos</a>
                         </li>
                         <li class="page-scroll hidden-xs hidden-sm">
-                            <a href="#" class="btn-u btn-u-lg btn-u-green btn-u-upper rounded-2x">Try trial version</a>
+                            <a href="#" class="btn-u btn-u-lg btn-u-green btn-u-upper rounded-2x" onclick="$('.g-popup-wrapper').show();">Probar versión</a>
                         </li>
                     </ul>
                 </div>
@@ -113,12 +110,12 @@
                     <div class="col-md-5 col-sm-12 col-xs-12 col-md-offset-1 promo-info">
                         <div><strong><span style="font-size: 22pt;">Di adi&oacute;s a las DISTANCIA</span><br /> </strong> <span style="font-size: 20pt;">con el nuevo CHAT instant&aacute;neo, pensado para usar en, desde y hacia CUBA.</span></div>
                         <div><span style="font-size: 12pt;">Os presentamos SIJÚ, la única app que te permite chatear en Cuba, con tu VECINO de al lado, o con "tu mejor AMIGA" que ahora vive a 2000 kms de distancia, SIN necesidad de INTERNET, en tiempo REAL, de forma INSTANTÁNEA y sin que te cobremos por tráfico.</span></div>
-                        <a href="#" class="btn-u btn-banner btn-apple">
-                            <i class="fa fa-android fa-2x"></i> Download App<br>
+                        <a class="btn-u btn-banner btn-apple" onclick="$('.g-popup-wrapper').show();">
+                            <i class="fa fa-android fa-2x"></i> Descargar App<br>
                             <span>TRIAL VERSION</span>
                         </a>
-                        <a href="#" class="btn-u btn-banner btn-android" >
-                            <i class="fa fa-android fa-2x"></i> Download App<br>
+                        <a class="btn-u btn-banner btn-android" onclick="$('.g-popup-wrapper').show();">
+                            <i class="fa fa-android fa-2x"></i> Descargar App<br>
                             <span>FULL VERSION</span>
                         </a>
                     </div>
@@ -269,7 +266,7 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="feature-shortinfo-icon" style="cursor:pointer">
-                                            <i id="actionBtn1" class="fa fa-check fa-2x" onclick="showHideActivation('oneEmail')" style="color:#FF3366;border:1px solid #FF3366"></i>
+                                            <i id="actionBtn1" class="fa fa-check fa-2x" onclick="showHideActivation('oneEmail')" @*style="color:#FF3366;border:1px solid #FF3366"*@></i>
                                         </div>
                                     </div>
 
@@ -282,7 +279,7 @@
                                     <div class="col-md-2">
 
                                     </div>
-                                    <div class="col-md-10 subscribe" style="margin-top:-10%" id="oneEmailDiv">
+                                    <div class="col-md-10 subscribe" style="display:none;margin-top:-10%" id="oneEmailDiv">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="email" placeholder="Enter your email">
                                             <span class="input-group-btn">
@@ -872,6 +869,31 @@
         </div>
     </section>
     <!-- End Footer -->
+    <!-- Wait Block -->
+    <div class="g-popup-wrapper">
+        <div class="g-popup g-popup--fb">
+            <div class="g-popup--fb-title">
+                <p target="_blank" href="https://www.facebook.com/htmlstream" class="g-popup--fb__logo" style="color:#ffffff">Información</p>
+                <div class="g-popup--fb-message">
+                Salimos <strong>"El die 24 de Enero"</strong><br>to read our blog on Facebook
+                </div>
+            </div>
+            <div class="g-popup--fb-widjet">
+                <div id="fb-root"></div>
+                <script>
+(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.4&appId=118547268248380";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+                <div class="fb-like" data-href="https://www.facebook.com/htmlstream/" data-width="270" data-layout="standard" data-action="like" data-show-faces="true" data-share="false"></div>
+            </div>
+            <a href="javascript:void(0);" class="g-popup__close g-popup--fb__close" onclick="$('.g-popup-wrapper').hide();$('body').removeClass('g-blur');is_box_visible = false;"><span class="icon-close" aria-hidden="true"></span></a>
+        </div>
+    </div>
+
     <!-- JS Global Compulsory -->
     <script src="~/Themes/Unify/assets/plugins/jquery/jquery.min.js"></script>
     <script src="~/Themes/Unify/assets/plugins/jquery/jquery-migrate.min.js"></script>
@@ -898,11 +920,11 @@
     <script src="~/Themes/Unify/assets/js/pages/siju.js"></script>
     <script src="~/Themes/Unify/assets/js/pages/ajaxCartPige.js"></script>
     <script>
-		$(function() {
-			App.init();
-			OwlCarousel.initOwlCarousel();
-			ContactForm.initContactForm();
-		});
+        $(function () {
+            App.init();
+            OwlCarousel.initOwlCarousel();
+            ContactForm.initContactForm();
+        });
     </script>
     <!--[if lt IE 10]>
       <script src="~/Themes/Unify/assets/plugins/sky-forms-pro/skyforms/js/jquery.placeholder.min.js"></script>
