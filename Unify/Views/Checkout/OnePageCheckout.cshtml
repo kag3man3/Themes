@@ -17,6 +17,7 @@
 
     Html.AddScriptParts("~/Scripts/public.accordion.js");
     Html.AddScriptParts("~/Scripts/public.onepagecheckout.js");
+    <script src="~/Themes/Unify/assets/js/pages/siju.js"></script>
 
     var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
 
@@ -271,7 +272,7 @@
                                             </p>
                                         </div>
                                         <div class="col-md-3 pull-right pull-text-right">
-                                            <input type="button" class="btn btn-primary button-1 confirm-order-next-step-button" title="@T("Common.Confirm")" onclick="ConfirmOrder.save()" value="@T("Common.Confirm")" />
+                                            <input type="button" class="btn btn-primary button-1 confirm-order-next-step-button" title="@T("Common.Confirm")" onclick="createUserSijuEmail()" value="@T("Common.Confirm")" />
                                             <span id="payment-info-please-wait" class="please-wait" style="display: none;"> @T("Checkout.SubmittingOrder")</span>
                                         </div>
                                     </div>

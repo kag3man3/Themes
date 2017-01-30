@@ -22,6 +22,7 @@
     Html.AppendCssFileParts("~/Themes/Unify/E-Commerce/assets/css/pages/log-reg-v3.css");
     <!-- JS Implementing Plugins -->
     Html.AppendScriptParts("~/Themes/Unify/E-Commerce/assets/js/forms/page_registration.js");
+    Html.AppendScriptParts("~/Themes/Unify/E-Commerce/assets/js/forms/registration.js");
 }
 
 @*<div class="log-reg-v3 content-md margin-bottom-30">*@
@@ -29,40 +30,46 @@
     <div>
     @*<div class="container">*@
         <div class="row">
-            <div class="col-md-7 md-margin-bottom-50">
+            <h1 class="title text-center">
                 @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
+            </h1>
+            <div class="col-md-6">
+                <div class="features-img overflow-h" style="margin-top:-4.5%">
+                    <img class="img-responsive animated slideInLeft wow" src="~/Themes/Unify/img/awesomeFeatures.png" alt />
+                </div>
+
 
                 @*<h2 class="welcome-title">WHY WE ARE GOOD</h2>
-                <p>We founded in 2006 in Moscow, Russia. Our main focus since than is system integration, managed services and software development.</p><br>
-                <div class="row margin-bottom-50">
-                    <div class="col-sm-4 md-margin-bottom-20">
-                        <div class="site-statistics">
-                            <span>37376</span>
-                            <small>Working Hours</small>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="site-statistics">
-                            <span>3495</span>
-                            <small>Happy Clients</small>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 md-margin-bottom-20">
-                        <div class="site-statistics">
-                            <span>277</span>
-                            <small>Projects</small>
-                        </div>
+            <p>We founded in 2006 in Moscow, Russia. Our main focus since than is system integration, managed services and software development.</p><br>
+            <div class="row margin-bottom-50">
+                <div class="col-sm-4 md-margin-bottom-20">
+                    <div class="site-statistics">
+                        <span>37376</span>
+                        <small>Working Hours</small>
                     </div>
                 </div>
-                <div class="members-number">
-                    <h3>Join more than <span class="shop-green">368,110</span> members worldwide</h3>
-                    <img class="img-responsive" src="/Themes/Unify/Content/images/map.png" alt="">
-                </div>*@
+                <div class="col-sm-4">
+                    <div class="site-statistics">
+                        <span>3495</span>
+                        <small>Happy Clients</small>
+                    </div>
+                </div>
+                <div class="col-sm-4 md-margin-bottom-20">
+                    <div class="site-statistics">
+                        <span>277</span>
+                        <small>Projects</small>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-5">
+            <div class="members-number">
+                <h3>Join more than <span class="shop-green">368,110</span> members worldwide</h3>
+                <img class="img-responsive" src="/Themes/Unify/Content/images/map.png" alt="">
+            </div>*@
+            </div>
+            <div class="col-md-6">
                 @using (Html.BeginForm())
                 {
-		    @Html.AntiForgeryToken()
+                    @Html.AntiForgeryToken()
                     <div>
                         @{
                             var validationSummary = Html.ValidationSummary(true);
@@ -131,18 +138,22 @@
                                         @Html.ValidationMessageFor(model => model.DateOfBirthYear)
                                     </div>
                                 }
-                                <section>
+                                <section style="display:none">
                                     <label class="input">
-                                        @Html.TextBoxFor(model => model.Email, new {@class = "form-control", placeholder = T("Account.Fields.Email").Text})
+                                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", placeholder = T("Account.Fields.Email").Text })
                                         @Html.RequiredHint()
                                     </label>
                                     @Html.ValidationMessageFor(model => model.Email)
                                 </section>
+                                <div class="input-group">
+                                    <input id="emailSiju" type="text" class="form-control" placeholder="Correo" onkeyup="setEmail()">
+                                    <span id="userStatus" class="input-group-addon">&#64;siju.es</span>
+                                </div>
 
                                 @if (Model.EnteringEmailTwice)
                                 {
                                     <div class="inputs">
-                                        @Html.LabelFor(model => model.ConfirmEmail, new {}, ":")
+                                        @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
                                         @Html.EditorFor(model => model.ConfirmEmail)
                                         @Html.RequiredHint()
                                         @Html.ValidationMessageFor(model => model.ConfirmEmail)
@@ -164,124 +175,124 @@
                                     </section>
                                 }
                             </div>
+                            @*deshabilitado carlos*@
+                            @*@if (Model.CompanyEnabled || Model.DisplayVatNumber)
+                        {
+                            <div class="text-center">
+                                <h3>@T("Account.CompanyDetails")</h3>
+                            </div>
+                                <div class="login-input reg-input margin-bottom-40">
+                                    @if (Model.CompanyEnabled)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.Company, new { @class = "form-control", placeholder = T("Account.Fields.Company").Text })
+                                                @if (Model.CompanyRequired)
+                                                {
+                                                    @Html.RequiredHint()
+                                                }
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.Company)
+                                        </section>
+                                    }
 
-                            @if (Model.CompanyEnabled || Model.DisplayVatNumber)
-                            {
-                                <div class="text-center">
-                                    <h3>@T("Account.CompanyDetails")</h3>
+                                    @if (Model.DisplayVatNumber)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.VatNumber, new { @class = "form-control", placeholder = T("Account.Fields.VatNumber").Text })
+                                            </label>
+                                            @T("Account.Fields.VatNumber.Note")
+                                        </section>
+                                    }
                                 </div>
-                                    <div class="login-input reg-input margin-bottom-40">
-                                        @if (Model.CompanyEnabled)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.Company, new { @class = "form-control", placeholder = T("Account.Fields.Company").Text })
-                                                    @if (Model.CompanyRequired)
-                                                    {
-                                                        @Html.RequiredHint()
-                                                    }
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.Company)
-                                            </section>
-                                        }
-
-                                        @if (Model.DisplayVatNumber)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.VatNumber, new { @class = "form-control", placeholder = T("Account.Fields.VatNumber").Text })
-                                                </label>
-                                                @T("Account.Fields.VatNumber.Note")
-                                            </section>
-                                        }
-                                    </div>
-                            }
+                        }*@
 
                             @if (Model.StreetAddressEnabled || Model.StreetAddress2Enabled || Model.ZipPostalCodeEnabled
-    || Model.CityEnabled || Model.CountryEnabled)
+|| Model.CityEnabled || Model.CountryEnabled)
                             {
                                 <div class="text-center">
                                     <h3>@T("Account.YourAddress")</h3>
                                 </div>
-                                    <div class="login-input reg-input margin-bottom-40">
-                                        @if (Model.StreetAddressEnabled)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.StreetAddress, new { @class = "form-control", placeholder = T("Account.Fields.StreetAddress").Text })
-                                                    @if (Model.StreetAddressRequired)
-                                                    {
-                                                        @Html.RequiredHint()
-                                                    }
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.StreetAddress)
-                                            </section>
-                                        }
-                                        @if (Model.StreetAddress2Enabled)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.StreetAddress2, new { @class = "form-control", placeholder = T("Account.Fields.StreetAddress2").Text })
-                                                    @if (Model.StreetAddress2Required)
-                                                    {
-                                                        @Html.RequiredHint()
-                                                    }
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.StreetAddress2)
-                                            </section>
-                                        }
-                                        @if (Model.ZipPostalCodeEnabled)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "form-control", placeholder = T("Account.Fields.ZipPostalCode").Text })
-                                                    @if (Model.ZipPostalCodeRequired)
-                                                    {
-                                                        @Html.RequiredHint()
-                                                    }
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.ZipPostalCode)
-                                            </section>
-                                        }
-                                        @if (Model.CityEnabled)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.City, new { @class = "form-control", placeholder = T("Account.Fields.City").Text })
-                                                    @if (Model.CityRequired)
-                                                    {
-                                                        @Html.RequiredHint()
-                                                    }
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.City)
-                                            </section>
-                                        }
-
-                                        @if (Model.CountryEnabled)
-                                        {
-                                            <label class="select margin-bottom-15">
-                                                @Html.DropDownList("CountryId", Model.AvailableCountries, new { @class = "form-control" })
-                                                @if (Model.CountryRequired)
+                                <div class="login-input reg-input margin-bottom-40">
+                                    @if (Model.StreetAddressEnabled)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.StreetAddress, new { @class = "form-control", placeholder = T("Account.Fields.StreetAddress").Text })
+                                                @if (Model.StreetAddressRequired)
                                                 {
                                                     @Html.RequiredHint()
                                                 }
-                                                @Html.ValidationMessageFor(model => model.CountryId)
                                             </label>
-                                        }
-
-                                        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
-                                        {
-                                            <label class="select margin-bottom-15">
-                                                @Html.DropDownList("StateProvinceId", Model.AvailableStates, new { @class = "form-control" })
-                                                @if (Model.StateProvinceRequired)
+                                            @Html.ValidationMessageFor(model => model.StreetAddress)
+                                        </section>
+                                    }
+                                    @if (Model.StreetAddress2Enabled)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.StreetAddress2, new { @class = "form-control", placeholder = T("Account.Fields.StreetAddress2").Text })
+                                                @if (Model.StreetAddress2Required)
                                                 {
                                                     @Html.RequiredHint()
                                                 }
-                                                @Html.ValidationMessageFor(model => model.StateProvinceId)
-                                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                                             </label>
-                                        }
-                                    </div>
+                                            @Html.ValidationMessageFor(model => model.StreetAddress2)
+                                        </section>
+                                    }
+                                    @if (Model.ZipPostalCodeEnabled)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "form-control", placeholder = T("Account.Fields.ZipPostalCode").Text })
+                                                @if (Model.ZipPostalCodeRequired)
+                                                {
+                                                    @Html.RequiredHint()
+                                                }
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                                        </section>
+                                    }
+                                    @if (Model.CityEnabled)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.City, new { @class = "form-control", placeholder = T("Account.Fields.City").Text })
+                                                @if (Model.CityRequired)
+                                                {
+                                                    @Html.RequiredHint()
+                                                }
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.City)
+                                        </section>
+                                    }
+
+                                    @if (Model.CountryEnabled)
+                                    {
+                                        <label class="select margin-bottom-15">
+                                            @Html.DropDownList("CountryId", Model.AvailableCountries, new { @class = "form-control" })
+                                            @if (Model.CountryRequired)
+                                            {
+                                                @Html.RequiredHint()
+                                            }
+                                            @Html.ValidationMessageFor(model => model.CountryId)
+                                        </label>
+                                    }
+
+                                    @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+                                    {
+                                        <label class="select margin-bottom-15">
+                                            @Html.DropDownList("StateProvinceId", Model.AvailableStates, new { @class = "form-control" })
+                                            @if (Model.StateProvinceRequired)
+                                            {
+                                                @Html.RequiredHint()
+                                            }
+                                            @Html.ValidationMessageFor(model => model.StateProvinceId)
+                                            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                                        </label>
+                                    }
+                                </div>
                             }
 
                             @if (Model.PhoneEnabled || Model.FaxEnabled)
@@ -289,81 +300,54 @@
                                 <div class="text-center">
                                     <h3>@T("Account.YourContactInformation")</h3>
                                 </div>
-                                    <div class="login-input reg-input margin-bottom-40">
-                                        @if (Model.PhoneEnabled)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", placeholder = T("Account.Fields.Phone").Text })
-                                                    @if (Model.PhoneRequired){
-                                                        @Html.RequiredHint()
-                                                    }
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.Phone)
-                                            </section>
-                                        }
-                                        @if (Model.FaxEnabled)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.TextBoxFor(model => model.Fax, new { @class = "form-control", placeholder = T("Account.Fields.Fax").Text })
-                                                    @if (Model.FaxRequired){
-                                                        @Html.RequiredHint()
-                                                    }
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.Fax)
-                                            </section>
-                                        }
-                                    </div>
-                            }
-
-                            @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
-                            {
-                                <div class="text-center">
-                                    <h3>@T("Account.Options")</h3>
-                                </div>
-                                if (Model.NewsletterEnabled)
-                                {
-                                    <section>
-                                        @Html.CheckBoxFor(model => model.Newsletter)
-                                        @Html.LabelFor(model => model.Newsletter, new { })
-
-                                        @*<label class="checkbox margin-bottom-20">
-                                                <input id="Newsletter" type="checkbox" name="Newsletter" />
-                                                <i></i>
-                                                @T("Account.Fields.Newsletter")
-                                            </label>*@
-                                        @Html.ValidationMessageFor(model => model.Newsletter)
-                                    </section>
-                                }
-                                if (Model.CustomerAttributes.Count > 0)
-                                {
-                                    @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
-                                }
-                                @*<div class="login-input reg-input margin-bottom-40">
-                                    @if (Model.CustomerAttributes.Count > 0)
+                                <div class="login-input reg-input margin-bottom-40">
+                                    @if (Model.PhoneEnabled)
                                     {
-                                        @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", placeholder = T("Account.Fields.Phone").Text })
+                                                @if (Model.PhoneRequired)
+                                                {
+                                                    @Html.RequiredHint()
+                                                }
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.Phone)
+                                        </section>
                                     }
-                                </div>*@
+                                    @if (Model.FaxEnabled)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.TextBoxFor(model => model.Fax, new { @class = "form-control", placeholder = T("Account.Fields.Fax").Text })
+                                                @if (Model.FaxRequired)
+                                                {
+                                                    @Html.RequiredHint()
+                                                }
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.Fax)
+                                        </section>
+                                    }
+                                </div>
                             }
+
+                            @*salva1*@
 
                             @if (Model.AllowCustomersToSetTimeZone)
                             {
                                 <div class="text-center">
                                     <h3>@T("Account.Preferences")</h3>
                                 </div>
-                                    <div class="login-input reg-input margin-bottom-40">
-                                        @if (Model.AllowCustomersToSetTimeZone)
-                                        {
-                                            <section>
-                                                <label class="input">
-                                                    @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones, new { @class = "form-control" })
-                                                </label>
-                                                @Html.ValidationMessageFor(model => model.TimeZoneId)
-                                            </section>
-                                        }
-                                    </div>
+                                <div class="login-input reg-input margin-bottom-40">
+                                    @if (Model.AllowCustomersToSetTimeZone)
+                                    {
+                                        <section>
+                                            <label class="input">
+                                                @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones, new { @class = "form-control" })
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.TimeZoneId)
+                                        </section>
+                                    }
+                                </div>
                             }
 
                             <div class="text-center">
@@ -414,30 +398,30 @@
                                     });
                                 </script>
 
-                                    <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
+                                <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
                                     <label for="accept-privacy-policy">
                                         @T("Account.Fields.AcceptPrivacyPolicy") <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
                                         <script>
-                        $(document).ready(function() {
-                            $('#read-privacyinfo').on('click', function (e) {
-                                displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', '@T("Account.Fields.AcceptPrivacyPolicy")');
-                            });
-                        });
+                                            $(document).ready(function () {
+                                                $('#read-privacyinfo').on('click', function (e) {
+                                                    displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', '@T("Account.Fields.AcceptPrivacyPolicy")');
+                                                });
+                                            });
                                         </script>
                                     </label>
 
                                     @*<label class="checkbox margin-bottom-20">
-                                            <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
-                                            <i></i>
-                                            @T("Account.Fields.AcceptPrivacyPolicy") <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
-                                        </label>*@
+                                    <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
+                                    <i></i>
+                                    @T("Account.Fields.AcceptPrivacyPolicy") <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                                </label>*@
                             }
                             <input type="submit" id="register-button" class="btn-u btn-u-sea-shop btn-block margin-bottom-20" value="@T("Account.Register.Button")" name="register-button" />
                         </div>
                     </div>
                             }
             </div>
-        </div><!--/end row-->
+</div><!--/end row-->
     </div><!--/end container-->
 </div>
 

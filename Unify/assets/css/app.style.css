@@ -746,6 +746,10 @@ a:hover {
 .features {
 	padding: 70px 0 85px;
 }
+.features .features-text i:hover{
+	color:#2ecc71;
+    border: 1px solid #2ecc71;
+}
 
 /* Image padding */
 .features-img {

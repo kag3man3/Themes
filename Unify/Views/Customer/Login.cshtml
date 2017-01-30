@@ -41,14 +41,17 @@
         @Html.Partial("_ExternalAuthentication.Errors")
         <div class="row">
             <div class="col-md-6 md-margin-bottom-50">
-                @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
+                @*@Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })*@
+                <div class="features-img overflow-h" style="margin-top:-4.5%">
+                    <img class="img-responsive animated slideInLeft wow" src="~/Themes/Unify/img/awesomeFeatures.png" alt />
+                </div>
             </div>
                 <div class="col-md-6 md-margin-bottom-50">
                     @using (Html.BeginForm())
                     {
  
                         var validationSummary = Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text);
-                        <div class="log-reg-block sky-form">
+                        <div class="log-reg-block sky-form" style="width:80%">
                             <h2>@T("Account.Login.ReturningCustomer")</h2>
 
                             @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
@@ -115,7 +118,7 @@
                             <input class="btn-u btn-u-sea-shop btn-block margin-bottom-20" type="submit" value="@T("Account.Login.LoginButton")"/>
                         </div>
                     }
-                    <div class="log-reg-block sky-form">
+                    <div class="log-reg-block sky-form" style="width:80%">
                         @if (Model.CheckoutAsGuest)
                         {
                             <h2>@T("Account.Login.CheckoutAsGuestOrRegister")</h2>

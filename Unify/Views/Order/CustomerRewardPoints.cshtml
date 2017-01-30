@@ -12,7 +12,12 @@
 @model CustomerRewardPointsModel
 @using Nop.Web.Models.Customer
 @using Nop.Web.Models.Order
+
+@*<script src="~/Themes/Unify/assets/js/pages/siju.js"></script>*@
+@*http://127.0.0.1:2000/Administration/Scripts/kendo/2014.1.318/kendo.web.min.js*@
 @{
+    Html.AppendScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.web.min.js");
+
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
     //title
@@ -30,75 +35,159 @@
         <h2 class="title text-center">@T("Account.MyAccount") - @T("Account.RewardPoints")</h2>
     </div>
     <div class="custom-page-box-div">
-        <div class="reward-points-overview">
-            <div class="current-balance">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
-            @if (Model.MinimumRewardPointsBalance > 0)
-            {
-                <div class="min-balance">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
-            }
-        </div>
-        <div class="space15px"></div>
-        <div class="reward-points-history">
-            <div class="title">
-                <strong>@T("RewardPoints.History")</strong>
+        <div class="box box-info" id="panelId">
+            <div class="box-header with-border clearfix">
+                <div class="box-title">
+                    <i class="fa ion-stats-bars"></i>
+                    OKOKOK
+                </div>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        @if (false)
+                        {
+                            <text><i class="fa fa-plus"></i></text>
+                        }
+                        else
+                        {
+                            <text><i class="fa fa-minus"></i></text>
+                        }
+                    </button>
+                </div>
             </div>
-            @if (Model.RewardPoints.Count > 0)
-            {
-                <div id="cart_items">
-                    <div class="table-responsive cart_info">
-                        <table class="table table-condensed">
-                            <thead>
-                            <tr class="cart_menu">
-                                <td class="a-center date">
-                                    @T("RewardPoints.Fields.Date")
-                                </td>
-                                <td class="a-center points">
-                                    @T("RewardPoints.Fields.Points")
-                                </td>
-                                <td class="a-center points-balance">
-                                    @T("RewardPoints.Fields.PointsBalance")
-                                </td>
-                                <td class="a-center message">
-                                    @T("RewardPoints.Fields.Message")
-                                </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @for (int i = 0; i < Model.RewardPoints.Count; i++)
-                            {
-                                var item = Model.RewardPoints[i];
-                                <tr @(i%2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                    <td class="a-center date">
-                                        @item.CreatedOn
-                                    </td>
-                                    <td class="a-center points">
-                                        @item.Points
-                                    </td>
-                                    <td class="a-center points-balance">
-                                        @item.PointsBalance
-                                    </td>
-                                    <td class="a-left message">
-                                        @item.Message
-                                    </td>
-                                </tr>
-                            }
-
-                            </tbody>
-                        </table>
+            <div class="box-body">
+                <div class="col-lg-3 col-xs-6">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>5</h3>
+                            <p>NumberOfOrders</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            MoreInfo
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
                     </div>
                 </div>
-                var pager = Html.Pager(Model.PagerModel);
-                if (!MvcHtmlString.IsNullOrEmpty(pager))
-                {
-                    <div class="pager">
-                        @pager
+                <div class="col-lg-3 col-xs-6">
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>5</h3>
+                            <p>NumberOfPendingReturnRequests</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-refresh"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            MoreInfo
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
                     </div>
-                }
-            }
-            else
-            {
-                @T("RewardPoints.NoHistory")
-            }
+                </div>
+                <div class="col-lg-3 col-xs-6">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>6</h3>
+                            <p>NumberOfCustomers</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            MoreInfo
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-xs-6">
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>7</h3>
+                            <p>LowStockProducts</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            MoreInfo
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <script>
+            $(document).ready(function () {
+                $('#panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    //var collapsed = !$('#panelId').hasClass('collapsed-box');
+                    @*saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);*@
+                });
+            });
+                </script>
+            </div>
         </div>
+
+
+        <div id="customerroles-grid"></div>
+
+        <script>
+                        $(document).ready(function () {
+                            $("#customerroles-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "http://localhost:64736/Service2.svc/historyUserSiju/adfjdahf",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        //display_kendoui_grid_error(e);
+                                        //// Cancel the changes
+                                        //this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "payDay",
+                                    title: "Fecha de la Compra",
+                                    width: 300
+                                }, {
+                                    field: "day",
+                                    title: "Dias Comprados",
+									attributes: { style: "text-align:center" },
+                                    width: 150
+                                }, {
+                                    field: "startDay",
+                                    title: "Fecha Inicio",
+                                    width: 300
+                                }, {
+                                    field: "endDay",
+                                    title: "Fecha Fin",
+                                    width: 300
+                                }]
+                            });
+                        });
+        </script>
     </div>
 </div>

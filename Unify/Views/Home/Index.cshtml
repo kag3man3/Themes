@@ -1,4 +1,27 @@
-﻿<!DOCTYPE html>
+﻿@using Nop.Core;
+@using Nop.Core.Domain.Customers;
+@using Nop.Core.Infrastructure;
+@if (EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsRegistered())
+{
+    <script>
+        function isLogin() {
+            return true;
+        }
+    </script>
+}
+else
+{
+    <script>
+        function isLogin()
+        {
+            return false;
+        }
+    </script>
+}
+
+
+
+<!DOCTYPE html>
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
@@ -92,7 +115,7 @@
                             <a href="#contact">Contactenos</a>
                         </li>
                         <li class="page-scroll hidden-xs hidden-sm">
-                            <a href="#" class="btn-u btn-u-lg btn-u-green btn-u-upper rounded-2x" onclick="$('.g-popup-wrapper').show();">Probar versión</a>
+                            <a href="~/login?ReturnUrl=%2fcustomer%2finfo" class="btn-u btn-u-lg btn-u-green btn-u-upper rounded-2x">Login</a>
                         </li>
                     </ul>
                 </div>
@@ -108,12 +131,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 col-xs-12 col-md-offset-1 promo-info">
-                        <div><strong><span style="font-size: 22pt;">Di adi&oacute;s a las DISTANCIA</span><br /> </strong> <span style="font-size: 20pt;">con el nuevo CHAT instant&aacute;neo, pensado para usar en, desde y hacia CUBA.</span></div>
-                        <div><span style="font-size: 12pt;">Os presentamos SIJÚ, la única app que te permite chatear en Cuba, con tu VECINO de al lado, o con "tu mejor AMIGA" que ahora vive a 2000 kms de distancia, SIN necesidad de INTERNET, en tiempo REAL, de forma INSTANTÁNEA y sin que te cobremos por tráfico.</span></div>
-                        <a class="btn-u btn-banner btn-apple" onclick="$('.g-popup-wrapper').show();">
-                            <i class="fa fa-android fa-2x"></i> Descargar App<br>
-                            <span>TRIAL VERSION</span>
-                        </a>
+                        <div><strong><span style="font-size: 22pt;">Di adi&oacute;s a las DISTANCIA</span><br /> </strong> <span style="font-size: 20pt;">con el nuevo CHAT instantáneo, pensado para usar desde y hacia CUBA.</span></div>
+                        <div style="margin-bottom:3%"><span style="font-size: 12pt;">Os presentamos SIJÚ, la única app que te permite chatear en Cuba con tu VECINO de al lado o con "tu mejor AMIGA" que ahora vive a 2000 kms de distancia, SIN necesidad de INTERNET, en tiempo REAL y de forma INSTANTÁNEA.</span></div>
+                        
                         <a class="btn-u btn-banner btn-android" onclick="$('.g-popup-wrapper').show();">
                             <i class="fa fa-android fa-2x"></i> Descargar App<br>
                             <span>FULL VERSION</span>
@@ -133,8 +153,8 @@
         <div class="container">
             <div class="g-pt-90">
                 <div class="g-heading-v10 g-mb-30 text-center">
-                    <h2><em class="block-name"><span>01.</span> Acerca</em> CHATEAR EN REDES TELEFONICAS SIN INTERNET <strong>YA NO ES UN SUEÑO</strong></h2>
-                    <p>Sin cobrar por tráfico de datos, rápida, segura, con una interfaz moderna e innovadora, esta APP asegura que se puede chatear tanto dentro como fuera de Cuba.</p>
+                    <h2><em class="block-name"><span>01.</span> Acerca</em> CHATEAR sin la necesidad de acceso a INTERNET <strong>YA NO ES UN SUEÑO</strong></h2>
+                    <p>De una manera rápida y segura, con una interfaz moderna e innovadora, sin cobrar adicionalmente por el tráfico de datos tú puedes chatear con tus amigos en Cuba o en cualquier parte del mundo.</p>
                 </div>
 
                 <div class="row equal-height-columns">
@@ -142,7 +162,7 @@
                         <img src="~/Themes/Unify/img/about1.jpg" alt="">
                         <div class="short-info-text">
                             <h2>Offline</h2>
-                            <p>Porque no necesitas estar conectado a Internet para utilizarla. Di  Hola ;) desde la comodidad de tu casa <i class="fa fa-home fa-1x"></i> ¡!!</p>
+                            <p>Di Hola ;) desde la comodidad de tu casa:  ¡Porque no necesitas estar conectado a Internet para utilizarla!</p>
                         </div>
                     </div>
 
@@ -150,7 +170,7 @@
                         <img src="~/Themes/Unify/img/about2.jpg" alt="">
                         <div class="short-info-text">
                             <h2>Chatea</h2>
-                            <p>Porque puedes chatear enviando mensajes de texto tanto a tus contactos locales, como al extranjero. ¡!Ahora planear algo entre amig@s se ha vuelto muy fácil <i class="fa fa-birthday-cake fa-1x"></i>  ¡!!</p>
+                            <p>Ahora planear algo entre amig@s se ha vuelto muy fácil: ¡Porque puedes enviar mensajes de texto tanto a tus contactos locales, como al extranjero.</p>
                         </div>
                     </div>
 
@@ -158,7 +178,7 @@
                         <img src="~/Themes/Unify/img/about3.jpg" alt="">
                         <div class="short-info-text">
                             <h2>Multimedia</h2>
-                            <p>Recibe y envía tantas fotos o mensajes de voz quieras, sin temer pagar por ello pues sabemos que la vida compartida es mejor <i class="fa fa-photo fa-1x"></i></p>
+                            <p>La vida compartida es mejor: ¡Recibe y envía tantas fotos, imágenes, emoticones o mensajes!</p>
                         </div>
                     </div>
 
@@ -166,7 +186,7 @@
                         <img src="~/Themes/Unify/img/about4.jpg" alt="">
                         <div class="short-info-text">
                             <h2>Rapidez</h2>
-                            <p>Si tienes cobertura de datos en tu área garantizamos un Chat de mensajería INSTANTÁNEA y en tiempo real, para que tengas comunicaciones fluidas. Porque nosotr@s también odiamos las esperas <i class="fa fa-fighter-jet fa-1x"></i></p>
+                            <p>Porque a nosotr@s tampoco nos gusta la espera: ¡Si tienes cobertura de datos en tu área garantizamos un Chat de mensajería INSTANTÁNEA y en tiempo real!</p>
                         </div>
                     </div>
                 </div>
@@ -191,7 +211,7 @@
                                 Siju es más que un cliente de <br>
                                 correo
                             </h3>
-                            <p>Siju es una potente herramienta que trabaja con el principio de un correo electrónico pero pensado para que puedas hablar con tus amigos de forma ágil, amena y como en un chat.</p>
+                            <p>Sijú es una potente herramienta que trabaja bajo el principio del  correo electrónico pero pensado para que puedas hablar con tus amigos de forma ágil, amena a la manera de una interface  chat.</p>
                         </div>
                     </div>
 
@@ -202,7 +222,7 @@
                                 Sin mediar terceros <br>
                                 servidores
                             </h3>
-                            <p>Entre contactos Siju solo median los servidores de correos seleccionados por cada usuario, eliminando con ello demoras en las entregas y un posible observador de su información confidencial.</p>
+                            <p>Entre los contactos con cuentas en los servidores Nauta, no median terceros servidores evitando tráficos innecesarios y congestiones.</p>
                         </div>
                     </div>
 
@@ -210,7 +230,7 @@
                         <div class="benefit equal-height-column">
                             <i class="fa fa-battery-full fa-3x"></i>
                             <h3>Minimiza el consumo de su <br>bateria</h3>
-                            <p>Tiene una Interfaz oscura para darle más tiempo de duración a su Batería y así contrarrestar el consumo que pueda generar mantener los Datos abiertos.</p>
+                            <p>Tiene una Interfaz oscura para darle más tiempo de duración a su Batería.</p>
                         </div>
                     </div>
                 </div>
@@ -220,23 +240,23 @@
                         <div class="benefit equal-height-column">
                             <i class="fa fa-file-zip-o fa-3x"></i>
                             <h3>compresión para los ficheros <br>multimedia</h3>
-                            <p>Siju comprime sus archivos Multimedia (Voz y Fotos) con un nivel de compresión que hace posible su subida y descarga en redes de datos extremadamente lentas.</p>
+                            <p>Sijú comprime sus archivos Multimedia (Voz y Fotos) con un nivel de compresión que hace posible su subida y descarga en redes de datos donde la velocidad de la conexión puede ser un problema.</p>
                         </div>
                     </div>
 
                     <div class="col-md-4 benefit-box animated fadeIn wow" data-wow-duration="1.5s" data-wow-delay=".8s">
                         <div class="benefit equal-height-column">
                             <i class="fa fa-dollar fa-3x"></i>
-                            <h3>Ahora hablando más gastas menos<br> menos</h3>
-                            <p>Para los usuarios de Cuba que habiliten el Nuevo servicio de Bolsa Nauta hemos calculado un aproximado de hasta 1300 líneas de chats antes que consuma los 5 megas que ofrece Etecsa a un valor de 1.50 CUC.</p>
+                            <h3>Ahora hablando más gastas menos</h3>
+                            <p>Para los usuarios de Cuba que habiliten el Nuevo Servicio de Bolsa Nauta hemos calculado un aproximado de hasta 1300 líneas de chats antes que consuma los 5 megas que ofrece el servicio a un valor de 1.50 CUC.</p>
                         </div>
                     </div>
 
                     <div class="col-md-4 benefit-box animated fadeIn wow" data-wow-duration="1.5s" data-wow-delay="1s">
                         <div class="benefit equal-height-column">
                             <i class="fa fa-signal fa-3x"></i>
-                            <h3>recibe los mensajes de forma <br> instantanea</h3>
-                            <p>SIJU se mantiene a la expectativa de un nuevo mensaje gracias a la relación con el Servidor. Esto le permitirá estar disponible, a todo momento y con la garantía de un consumo inferior de 0.06 centavos 24 Horas.</p>
+                            <h3>recibe los mensajes de forma <br> instantánea</h3>
+                            <p>Mantenga Datos Abiertos y Sijú se mantendrá a la expectativa de un nuevo mensaje permitiéndole estar disponible a todo momento a la espera de una nueva línea de chat. Todo ello con la garantía de un consumo inferior de 0.06 centavos cada 24 Horas; siempre y cuando mantenga cerrada su APP de Correo hasta que realmente la necesite.</p>
                         </div>
                     </div>
                 </div>
@@ -259,65 +279,21 @@
                         <div class="col-md-7">
                             <div class="features-text">
                                 <div class="g-heading-v10 g-mb-65">
-                                    <h2><em class="block-name"><span>05.</span> ¿COMO HACERLA SUYA??</em> <strong>PUES SOLO PRUEBELA </strong>y <strong>LA USARA POR SIEMPRE</strong></h2>
-                                    <p>Para que usted se convenza hemos creado una versión de SIJU TRIAL que le permitirá probar su funcionamiento. Si la quiere hacer suya pues solo pagara 1.00USD por mes sin que piense en cobros adicionales por cantidad de mensajes o el volumen de datos de sus multimedia.</p>
+                                    <h2><em class="block-name"><span>03.</span> ¿COMO HACERLA SUYA??</em> <strong>PUES SOLO PRUEBELA </strong>y <strong>LA USARA POR SIEMPRE</strong></h2>
+                                    <p>No deje que alguien le cuente y úsela usted mismo. Sijú ha definido en su política el ser totalmente gratuita para todo aquel la use dentro de Cuba. Para los que se encuentran fuera el cobro de $2.00 Euros por mes será todo cuanto deberá pagar pues no existirán cobros adicionales por cantidad de mensajes o volumen de datos multimedia que usted necesite tener.</p>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <div class="feature-shortinfo-icon" style="cursor:pointer">
-                                            <i id="actionBtn1" class="fa fa-check fa-2x" onclick="showHideActivation('oneEmail')" @*style="color:#FF3366;border:1px solid #FF3366"*@></i>
+                                        <div class="feature-shortinfo-icon" style="cursor:pointer;">
+                                            <i id="actionBtn1" class="fa fa-check fa-2x" onclick="showHideActivation()"></i>
                                         </div>
                                     </div>
 
                                     <div class="col-md-10">
                                         <div class="feature-shortinfo-text">
                                             <h2>ACTIVACION DE UNA CUENTA</h2>
-                                            <p> El pago de Sijú es Semestral permitiendo esta opción el pago individual de 6 dólares. Quedando activa nuestra APP para usted por el periodo de 6 meses.</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-
-                                    </div>
-                                    <div class="col-md-10 subscribe" style="display:none;margin-top:-10%" id="oneEmailDiv">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="email" placeholder="Enter your email">
-                                            <span class="input-group-btn">
-                                                <button class="btn-u btn-sub" type="button" onclick="comprarOneEmail()">Activar</button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <div class="feature-shortinfo-icon" style="cursor:pointer">
-                                            <i id="actionBtn2" class="fa fa-check fa-2x" onclick="showHideActivation('twoEmail')"></i>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-10">
-                                        <div class="feature-shortinfo-text">
-                                            <h2>ACTIVACION DE DOS CUENTAS</h2>
-                                            <p>El pago de Sijú es Semestral permitiendo esta opción el pago de dos cuentas por el importe de 12 dólares. Dando la posibilidad de activar dos cuentas por el periodo de seis meses.</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-
-                                    </div>
-                                    <div class="col-md-10 subscribe" style="display:none;margin-top:-10%" id="twoEmailDiv">
-                                        <div class="col-md-5">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="email" placeholder="Enter your email">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="email" placeholder="Enter your email">
-                                                <span class="input-group-btn">
-                                                    <button class="btn-u btn-sub" type="button" onclick="comprarTwoEmail()">Activar</button>
-                                                </span>
-                                            </div>
+                                            <p> El pago de Sijú es trimestral, permitiendo esta opción el pago individual de 6 euros. Quedando activa nuestra APP para usted por el periodo de 3 meses.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -334,7 +310,7 @@
                     <div class="col-md-7">
                         <div class="why-ourapp-text">
                             <div class="g-heading-v10 g-mb-65">
-                                <h2><em class="block-name"><span>06.</span> PORQUE NUESTRA APP</em>SIJU <strong>LA APP DISEÑADA PARA TI</strong></h2>
+                                <h2><em class="block-name"><span>04.</span> PORQUE NUESTRA APP</em>SIJU <strong>LA APP DISEÑADA PARA TI</strong></h2>
                                 <p>Todo un equipo de diseñadores, programadores y soñadores hemos hecho esta APP pensando en Ti.</p>
                             </div>
                             <!-- Accordion v1 -->
@@ -349,7 +325,7 @@
                                     </div>
                                     <div id="collapse-One" class="panel-collapse collapse in">
                                         <div class="panel-body">
-                                            <p>Hemos agregado asombrosas funcionalidades a SIJU. Gran parte de ella se mueve de forma imperceptible para lograr su comunicación. Otras se dejan ver como la propia confirmación de llegada de sus mensajes o del estado de la Red de Datos en que se encuentra.</p>
+                                            <p>Hemos agregado asombrosas funcionalidades a SIJU. Gran parte de ellas se mueven de forma imperceptible para lograr su comunicación. Otras se dejan ver como la propia confirmación de llegada de sus mensajes o del estado de la Red de Datos en que se encuentra.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -379,7 +355,7 @@
                                     </div>
                                     <div id="collapse-Three" class="panel-collapse collapse">
                                         <div class="panel-body">
-                                            <p>Todo un equipo de desarrollo se encuentra perfeccionando el código de nuestra APP agregando nuevas funcionalidades para usted. Con cada  nueva actualización recibirá una notificación de descarga.</p>
+                                            <p>El equipo de desarrollo se encuentra perfeccionando el código de nuestra APP agregando nuevas funcionalidades para usted. Con cada nueva actualización recibirá una notificación de descarga.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -458,7 +434,7 @@
         <div class="container">
             <div class="app-screens">
                 <div class="g-heading-v10 g-mb-65 text-center">
-                    <h2><em class="block-name"><span>08.</span> Capturas de pantalla</em> Mira<strong> como funciona</strong></h2>
+                    <h2><em class="block-name"><span>05.</span> Capturas de pantalla</em> Mira<strong> como funciona</strong></h2>
                 </div>
 
                 <div class="cube-portfolio">
@@ -707,7 +683,7 @@
         <div class="container-fluid with-bg-1">
             <div class="subscribe">
                 <div class="g-heading-v10 g-mb-65">
-                    <h2><em class="block-name"><span>09.</span> Suscríbase </em> Suscríbase <strong>para mantenerse informado</strong></h2>
+                    <h2><em class="block-name"><span>06.</span> Suscríbase </em> Suscríbase <strong>para mantenerse informado</strong></h2>
                     <p>Con esta opción le enviaremos informaciones sobre actualizaciones de nuestro sistema, así como nuevos servicios que estaremos agregando próximamente.</p>
                 </div>
 
@@ -730,7 +706,7 @@
         <div class="container">
             <div class="faq">
                 <div class="g-heading-v10 g-mb-65">
-                    <h2><em class="block-name"><span>10.</span> FAQ</em> Preguntas <strong>más comunes?</strong></h2>
+                    <h2><em class="block-name"><span>07.</span> FAQ</em> Preguntas <strong>más comunes?</strong></h2>
                     <p>A continuación, las preguntas más comunes de los usuarios en el uso de nuestra APP.</p>
                 </div>
 
@@ -747,17 +723,19 @@
                         <div class="tab-pane fade in active" id="everything">
                             <div class="tab-in">
                                 <h4>¿Lentos accesos a Nauta?</h4>
-                                <p>Esta APP fue optimizada para su uso en redes lentas como las que mantiene Cuba. Pero no solo lentitud podrían primar en su conexión a Datos, pues existen zonas en las que se carece de conectividad o en las que no se encuentran cubiertas las necesidades de conexión por densidad poblacional dificultando o imposibilitando su acceso a las Redes de Datos y de esta manera viéndose afectado el desempeño de nuestra aplicación.</p>
+                                <p>Esta APP fue optimizada para entornos donde la velocidad de acceso puede ser una limitante. Sin embargo, mayor o menor velocidad de su conexión a Datos puede estar dada por un gran número de factores entre los que se destacan: 1) zonas con baja cobertura de conectividad, 2) zonas con mucha densidad de tráfico de datos y/o sobresaturación de las redes de comunicaciones, 3) calidad del teléfono móvil utilizado. En cualquiera de estas condiciones se puede ver afectado el desempeño de nuestra aplicación.</p>
                                 @*<a href="#">Read More</a>*@
                             </div>
                             <div class="tab-in">
                                 <h4>¿Si dejo abiertos datos me gastara Saldo?</h4>
-                                <p>Para que Siju funcione como un chat activo usted deberá mantener abierto el acceso a datos para esta aplicación. Existen móviles en los que los usuarios no puedan limitar el acceso a datos a otras aplicaciones, pero, no tema, pues en el caso de Cuba la compañía de Etecsa solo cobrara por las aplicaciones que generen tráfico con acceso a Nauta, aun cuando muestre su movil megas transferidos de Datos por otras aplicaciones. Hemos calculado que mantener Siju activo por 24 horas supone unos 0.06 centavos de CUC </p>
+                                <p>Para que Sijú funcione como un chat activo usted deberá mantener abierto el acceso a datos SOLAMENTE para esta aplicación. Mantener los datos abiertos con Sijú en cuentas Nautas, representara un consumo de $0.06 centavos de CUC cada 24 horas.
+                                Tenga en cuenta que el no mantener los Datos Abiertos solamente para esta APP lo hara perder la posibilidad de saber de cualquier intento de sus contactos para “iniciar” una sesión de chat con usted.
+</p>
                                 @*<a href="#">Read More</a>*@
                             </div>
                             <div class="tab-in">
                                 <h4>¿Cuánto cobra sijú por mensajes?</h4>
-                                <p>El trafico que usted genere sobre nuestra aplicación es totalmente gratuito. Siju no tiene en cuenta megas de multimedia, líneas de Chats u horas online. Solo cobramos a nuestros usuarios 1.00USD por mes para el mantenimiento de esta APP como una de las mejores herramientas de comunicación actual con Cuba.</p>
+                                <p>El tráfico que usted genere sobre nuestra aplicación no dispondrá de ninguna tarifa extra. Sijú no cobra por megas de multimedia, líneas de Chats u horas online. Por el uso de la aplicación se le cobrara solamente a los usuarios que se encuentren en el Exterior de Cuba, siendo el importe de cobro 2.00 Euros por mes. Valor que se destina al mantenimiento de los Servidores y al desarrollo constante en su conquista como una de las mejores herramientas de comunicación actual en y hacia Cuba.</p>
                                 @*<a href="#">Read More</a>*@
                             </div>
                             <div class="tab-in">
@@ -770,7 +748,7 @@
                         <div class="tab-pane fade in" id="lento">
                             <div class="tab-in">
                                 @*<h4>¿Lentos accesos a Nauta?</h4>*@
-                                <p>Esta APP fue optimizada para su uso en redes lentas como las que mantiene Cuba. Pero no solo lentitud podrían primar en su conexión a Datos, pues existen zonas en las que se carece de conectividad o en las que no se encuentran cubiertas las necesidades de conexión por densidad poblacional dificultando o imposibilitando su acceso a las Redes de Datos y de esta manera viéndose afectado el desempeño de nuestra aplicación.</p>
+                                <p>Esta APP fue optimizada para entornos donde la velocidad de acceso puede ser una limitante. Sin embargo, mayor o menor velocidad de su conexión a Datos puede estar dada por un gran número de factores entre los que se destacan: 1) zonas con baja cobertura de conectividad, 2) zonas con mucha densidad de tráfico de datos y/o sobresaturación de las redes de comunicaciones, 3) calidad del teléfono móvil utilizado. En cualquiera de estas condiciones se puede ver afectado el desempeño de nuestra aplicación.</p>
                                 @*<a href="#">Read More</a>*@
                             </div>
                         </div>
@@ -778,7 +756,8 @@
                         <div class="tab-pane fade in" id="saldo">
                             <div class="tab-in">
                                 @*<h4>¿Si dejo abiertos datos me gastara Saldo?</h4>*@
-                                <p>Para que Siju funcione como un chat activo usted deberá mantener abierto el acceso a datos para esta aplicación. Existen móviles en los que los usuarios no puedan limitar el acceso a datos a otras aplicaciones, pero, no tema, pues en el caso de Cuba la compañía de Etecsa solo cobrara por las aplicaciones que generen tráfico con acceso a Nauta, aun cuando muestre su movil megas transferidos de Datos por otras aplicaciones. Hemos calculado que mantener Siju activo por 24 horas supone unos 0.06 centavos de CUC </p>
+                                <p>Para que Sijú funcione como un chat activo usted deberá mantener abierto el acceso a datos SOLAMENTE para esta aplicación. Mantener los datos abiertos con Sijú en cuentas Nautas, representara un consumo de $0.06 centavos de CUC cada 24 horas.
+                                Tenga en cuenta que el no mantener los Datos Abiertos solamente para esta APP lo hara perder la posibilidad de saber de cualquier intento de sus contactos para “iniciar” una sesión de chat con usted.</p>
                                 @*<a href="#">Read More</a>*@
                             </div>
                         </div>
@@ -786,7 +765,7 @@
                         <div class="tab-pane fade in" id="mensajes">
                             <div class="tab-in">
                                 <h4>@*¿Cuánto cobra sijú por mensajes?*@</h4>
-                                <p>El trafico que usted genere sobre nuestra aplicación es totalmente gratuito. Siju no tiene en cuenta megas de multimedia, líneas de Chats u horas online. Solo cobramos a nuestros usuarios 1.00USD por mes para el mantenimiento de esta APP como una de las mejores herramientas de comunicación actual con Cuba.</p>
+                                <p>El tráfico que usted genere sobre nuestra aplicación no dispondrá de ninguna tarifa extra. Sijú no cobra por megas de multimedia, líneas de Chats u horas online. Por el uso de la aplicación se le cobrara solamente a los usuarios que se encuentren en el Exterior de Cuba, siendo el importe de cobro 2.00 Euros por mes. Valor que se destina al mantenimiento de los Servidores y al desarrollo constante en su conquista como una de las mejores herramientas de comunicación actual en y hacia Cuba.</p>
                                 @*<a href="#">Read More</a>*@
                             </div>
                         </div>
@@ -813,7 +792,7 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="g-heading-v10 g-mb-65">
-                                <h2 class="g-color-white"><em class="block-name"><span class="g-color-white">11.</span> Contacto</em> <strong>Contactenos</strong></h2>
+                                <h2 class="g-color-white"><em class="block-name"><span class="g-color-white">8.</span> Contacto</em> <strong>Contactenos</strong></h2>
                                 <p>Utilizando esta vía usted podrá enviarnos sus preguntas o criterios acerca de nuestra aplicación.</p>
                             </div>
                         </div>
@@ -824,26 +803,26 @@
                                     <div class="row">
                                         <div class="col-md-6 col-md-offset-0">
                                             <div class="margin-bottom-30">
-                                                <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                                                <input type="text" name="name" id="name" class="form-control" placeholder="Nombre">
                                             </div>
 
                                             <div class="margin-bottom-30">
-                                                <input type="text" name="email" id="email" class="form-control" placeholder="Email *">
+                                                <input type="text" name="email" id="email" class="form-control" placeholder="Correo *">
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 col-md-offset-0">
                                             <div class="margin-bottom-30">
-                                                <textarea rows="4" name="message" id="message" class="form-control g-textarea-noresize" placeholder="Message"></textarea>
+                                                <textarea rows="4" name="message" id="message" class="form-control g-textarea-noresize" placeholder="Mensaje"></textarea>
                                             </div>
-                                            <p><button type="submit" class="btn-u btn-u-lg btn-u-upper rounded-2x">Submit</button></p>
+                                            <p><button type="submit" class="btn-u btn-u-lg btn-u-upper rounded-2x" onclick="enviarEmail()">Enviar</button></p>
                                         </div>
                                     </div>
                                 </fieldset>
 
                                 <div class="message">
                                     <i class="rounded-x fa fa-check"></i>
-                                    <p>Your message was successfully sent!</p>
+                                    <p>Su correo ha sido enviado satisfactoriamente!</p>
                                 </div>
                             </form>
                         </div>
@@ -918,7 +897,7 @@
     <script src="~/Themes/Unify/assets/js/plugins/cube-portfolio.js"></script>
     <script src="~/Themes/Unify/assets/js/forms/contact.js"></script>
     <script src="~/Themes/Unify/assets/js/pages/siju.js"></script>
-    <script src="~/Themes/Unify/assets/js/pages/ajaxCartPige.js"></script>
+    @*<script src="~/Themes/Unify/assets/js/pages/ajaxCartPige.js"></script>*@
     <script>
         $(function () {
             App.init();
