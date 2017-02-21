@@ -114,9 +114,9 @@ else
                         <li class="page-scroll">
                             <a href="#contact">Contactenos</a>
                         </li>
-                        <li class="page-scroll hidden-xs hidden-sm">
+                        @*<li class="page-scroll hidden-xs hidden-sm">
                             <a href="~/login?ReturnUrl=%2fcustomer%2finfo" class="btn-u btn-u-lg btn-u-green btn-u-upper rounded-2x">Login</a>
-                        </li>
+                        </li>*@
                     </ul>
                 </div>
             </div>
@@ -286,7 +286,7 @@ else
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="feature-shortinfo-icon" style="cursor:pointer;">
-                                            <i id="actionBtn1" class="fa fa-check fa-2x" onclick="showHideActivation()"></i>
+                                            <i id="actionBtn1" class="fa fa-check fa-2x"></i>
                                         </div>
                                     </div>
 
@@ -836,11 +836,11 @@ else
                 <div class="row">
                     <div class="col-md-12 no-side-padding">
                         <ul class="list-inline social-list text-center">
-                            <li class="facebook social-item"><a class="btn-block" href="#"><i class="fa fa-facebook icon-2x"></i></a></li>
+                            <li class="facebook social-item"><a class="btn-block" href="https://www.facebook.com/Siju-Mensajer%C3%ADa-Instant%C3%A1nea-194206344402617/"><i class="fa fa-facebook icon-2x"></i></a></li>
                             <li class="pin social-item"><a class="btn-block" href="#"><i class="fa fa-pinterest icon-2x"></i></a></li>
                             <li class="dribbble social-item"><a class="btn-block" href="#"><i class="fa fa-dribbble icon-2x"></i></a></li>
                             <li class="inst social-item"><a class="btn-block" href="#"><i class="fa fa-instagram icon-2x"></i></a></li>
-                            <li class="twitter social-item"><a class="btn-block" href="#"><i class="fa fa-twitter icon-2x"></i></a></li>
+                            <li class="twitter social-item"><a class="btn-block" href="https://twitter.com/SIJUmsn"><i class="fa fa-twitter icon-2x"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -854,21 +854,10 @@ else
             <div class="g-popup--fb-title">
                 <p target="_blank" href="https://www.facebook.com/htmlstream" class="g-popup--fb__logo" style="color:white;font-size:30px;margin-left:2%">Información</p>
                 <div class="g-popup--fb-message">
-                Salimos <strong>"El die 24 de Enero"</strong><br>
+                Salimos <strong>"El die 1 de Marzo"</strong><br>
                 </div>
             </div>
-            <div class="g-popup--fb-widjet">
-                <div id="fb-root"></div>
-                <script>
-(function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.4&appId=118547268248380";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-                <div class="fb-like" data-href="https://www.facebook.com/htmlstream/" data-width="270" data-layout="standard" data-action="like" data-show-faces="true" data-share="false"></div>
-            </div>
+            
             <a href="javascript:void(0);" class="g-popup__close g-popup--fb__close" onclick="$('.g-popup-wrapper').hide();$('body').removeClass('g-blur');is_box_visible = false;"><span class="icon-close" aria-hidden="true"></span></a>
         </div>
     </div>
